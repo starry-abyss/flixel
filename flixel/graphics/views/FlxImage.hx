@@ -330,6 +330,21 @@ class FlxImage extends FlxGraphic
 			parent.y += offset.y;
 		}
 	}
+	
+	/**
+	 * Updates the sprite's hitbox (width, height, offset) according to the current scale. 
+	 * Also calls setOriginToCenter(). Called by setGraphicSize().
+	 */
+	public function updateHitbox():Void
+	{
+		if (parent == null)
+			return;
+		
+		parent.width = Math.abs(scale.x) * frameWidth;
+		parent.height = Math.abs(scale.y) * frameHeight;
+		offset.set( -0.5 * (parent.width - frameWidth), -0.5 * (parent.height - frameHeight));
+		centerOrigin();
+	}
 
 	/**
 	 * Sets the sprite's origin to its center - useful after adjusting 

@@ -77,9 +77,7 @@ class FlxAnimated extends FlxImage
 			animation._animations = animations;
 			
 			if (currName != null)
-			{
 				animation.play(currName, false, reverse, index);
-			}
 		}
 		else
 		{

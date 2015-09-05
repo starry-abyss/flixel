@@ -1,8 +1,8 @@
 package flixel.animation;
 
 import flixel.FlxG;
-import flixel.FlxSprite;
 import flixel.graphics.frames.FlxFrame;
+import flixel.graphics.views.FlxAnimated;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 
 class FlxAnimationController implements IFlxDestroyable
@@ -59,7 +59,7 @@ class FlxAnimationController implements IFlxDestroyable
 	/**
 	 * Internal, reference to owner sprite.
 	 */
-	private var _sprite:FlxSprite;
+	private var _owner:FlxAnimated;
 	
 	/**
 	 * Internal, currently playing animation.
@@ -70,27 +70,19 @@ class FlxAnimationController implements IFlxDestroyable
 	/**
 	 * Internal, stores all the animation that were added to this sprite.
 	 */
-	@:allow(flixel.FlxSprite)
+	@:allow(flixel.graphics.views.FlxAnimated)
 	private var _animations(default, null):Map<String, FlxAnimation>;
 	
-	private var _prerotated:FlxPrerotatedAnimation;
-	
-	public function new(Sprite:FlxSprite)
+	public function new(owner:FlxAnimated)
 	{
-		_sprite = Sprite;
+		_owner = owner;
 		_animations = new Map<String, FlxAnimation>();
 	}
 	
 	public function update(elapsed:Float):Void
 	{
 		if (_curAnim != null)
-		{
 			_curAnim.update(elapsed);
-		}
-		else if (_prerotated != null)
-		{
-			_prerotated.angle = _sprite.angle;
-		}
 	}
 	
 	public function copyFrom(controller:FlxAnimationController):FlxAnimationController
@@ -100,11 +92,6 @@ class FlxAnimationController implements IFlxDestroyable
 		for (anim in controller._animations)
 		{
 			add(anim.name, anim._frames, anim.frameRate, anim.looped);
-		}
-		
-		if (controller._prerotated != null)
-		{
-			createPrerotated();
 		}
 		
 		if (controller.name != null)
@@ -117,18 +104,9 @@ class FlxAnimationController implements IFlxDestroyable
 		return this;
 	}
 	
-	public function createPrerotated(?Controller:FlxAnimationController):Void
-	{
-		destroyAnimations();
-		Controller = (Controller != null) ? Controller : this;
-		_prerotated = new FlxPrerotatedAnimation(Controller, Controller._sprite.bakedRotationAngle);
-		_prerotated.angle = _sprite.angle;
-	}
-	
 	public function destroyAnimations():Void
 	{
 		clearAnimations();
-		clearPrerotated();
 	}
 	
 	public function destroy():Void
@@ -136,16 +114,7 @@ class FlxAnimationController implements IFlxDestroyable
 		destroyAnimations();
 		_animations = null;
 		callback = null;
-		_sprite = null;
-	}
-	
-	private function clearPrerotated():Void
-	{
-		if (_prerotated != null)
-		{
-			_prerotated.destroy();
-		}
-		_prerotated = null;
+		_owner = null;
 	}
 	
 	private function clearAnimations():Void
@@ -258,7 +227,7 @@ class FlxAnimationController implements IFlxDestroyable
 	 */
 	public function addByNames(Name:String, FrameNames:Array<String>, FrameRate:Int = 30, Looped:Bool = true):Void
 	{
-		if (_sprite.frames != null)
+		if (_owner.frames != null)
 		{
 			var indices:Array<Int> = new Array<Int>();
 			byNamesHelper(indices, FrameNames); // finds frames and appends them to the blank array
@@ -288,7 +257,7 @@ class FlxAnimationController implements IFlxDestroyable
 			return;
 		}
 		
-		if (_sprite.frames != null)
+		if (_owner.frames != null)
 		{
 			byNamesHelper(anim._frames, FrameNames); // finds frames and appends them to the existing array
 		}
@@ -305,7 +274,7 @@ class FlxAnimationController implements IFlxDestroyable
 	 */
 	public function addByStringIndices(Name:String, Prefix:String, Indices:Array<String>, Postfix:String, FrameRate:Int = 30, Looped:Bool = true):Void
 	{
-		if (_sprite.frames != null)
+		if (_owner.frames != null)
 		{
 			var frameIndices:Array<Int> = new Array<Int>();
 			byStringIndicesHelper(frameIndices, Prefix, Indices, Postfix); // finds frames and appends them to the blank array
@@ -337,7 +306,7 @@ class FlxAnimationController implements IFlxDestroyable
 			return;
 		}
 		
-		if (_sprite.frames != null)
+		if (_owner.frames != null)
 		{
 			byStringIndicesHelper(anim._frames, Prefix, Indices, Postfix); // finds frames and appends them to the existing array
 		}
@@ -354,7 +323,7 @@ class FlxAnimationController implements IFlxDestroyable
 	 */
 	public function addByIndices(Name:String, Prefix:String, Indices:Array<Int>, Postfix:String, FrameRate:Int = 30, Looped:Bool = true):Void
 	{
-		if (_sprite.frames != null)
+		if (_owner.frames != null)
 		{
 			var frameIndices:Array<Int> = new Array<Int>();
 			byIndicesHelper(frameIndices, Prefix, Indices, Postfix); // finds frames and appends them to the blank array
@@ -386,7 +355,7 @@ class FlxAnimationController implements IFlxDestroyable
 			return;
 		}
 		
-		if (_sprite.frames != null)
+		if (_owner.frames != null)
 		{
 			byIndicesHelper(anim._frames, Prefix, Indices, Postfix); // finds frames and appends them to the existing array
 		}
@@ -401,7 +370,7 @@ class FlxAnimationController implements IFlxDestroyable
 	private function findSpriteFrame(Prefix:String, Index:Int, Postfix:String):Int
 	{
 		var numFrames:Int = frames;
-		var flxFrames:Array<FlxFrame> = _sprite.frames.frames;
+		var flxFrames:Array<FlxFrame> = _owner.frames.frames;
 		for (i in 0...numFrames)
 		{
 			var name:String = flxFrames[i].name;
@@ -427,7 +396,7 @@ class FlxAnimationController implements IFlxDestroyable
 	*/
 	public function addByPrefix(Name:String, Prefix:String, FrameRate:Int = 30, Looped:Bool = true):Void
 	{
-		if (_sprite.frames != null)
+		if (_owner.frames != null)
 		{
 			var animFrames:Array<FlxFrame> = new Array<FlxFrame>();
 			findByPrefix(animFrames, Prefix); // adds valid frames to animFrames
@@ -463,7 +432,7 @@ class FlxAnimationController implements IFlxDestroyable
 			return;
 		}
 		
-		if (_sprite.frames != null)
+		if (_owner.frames != null)
 		{
 			var animFrames:Array<FlxFrame> = new Array<FlxFrame>();
 			findByPrefix(animFrames, Prefix); // adds valid frames to animFrames
@@ -624,9 +593,9 @@ class FlxAnimationController implements IFlxDestroyable
 	{
 		for (frameName in FrameNames)
 		{
-			if (_sprite.frames.framesHash.exists(frameName))
+			if (_owner.frames.framesHash.exists(frameName))
 			{
-				var frameToAdd:FlxFrame = _sprite.frames.framesHash.get(frameName);
+				var frameToAdd:FlxFrame = _owner.frames.framesHash.get(frameName);
 				AddTo.push(getFrameIndex(frameToAdd));
 			}
 		}
@@ -640,9 +609,9 @@ class FlxAnimationController implements IFlxDestroyable
 		for (index in Indices)
 		{
 			var name:String = Prefix + index + Postfix;
-			if (_sprite.frames.framesHash.exists(name))
+			if (_owner.frames.framesHash.exists(name))
 			{
-				var frameToAdd:FlxFrame = _sprite.frames.framesHash.get(name);
+				var frameToAdd:FlxFrame = _owner.frames.framesHash.get(name);
 				AddTo.push(getFrameIndex(frameToAdd));
 			}
 		}
@@ -684,7 +653,7 @@ class FlxAnimationController implements IFlxDestroyable
 	 */
 	private function findByPrefix(AnimFrames:Array<FlxFrame>, Prefix:String):Void
 	{
-		for (frame in _sprite.frames.frames)
+		for (frame in _owner.frames.frames)
 		{
 			if (StringTools.startsWith(frame.name, Prefix))
 			{
@@ -695,10 +664,10 @@ class FlxAnimationController implements IFlxDestroyable
 	
 	private function set_frameIndex(Frame:Int):Int
 	{
-		if (_sprite.frames != null)
+		if (_owner.frames != null)
 		{
 			Frame = Frame % frames;
-			_sprite.frame = _sprite.frames.frames[Frame];
+			_owner.frame = _owner.frames.frames[Frame];
 			frameIndex = Frame;
 			fireCallback();
 		}
@@ -708,12 +677,12 @@ class FlxAnimationController implements IFlxDestroyable
 	
 	private inline function get_frameName():String
 	{
-		return _sprite.frame.name;
+		return _owner.frame.name;
 	}
 	
 	private function set_frameName(Value:String):String
 	{
-		if (_sprite.frames != null && _sprite.frames.framesHash.exists(Value))
+		if (_owner.frames != null && _owner.frames.framesHash.exists(Value))
 		{
 			if (_curAnim != null)
 			{
@@ -721,7 +690,7 @@ class FlxAnimationController implements IFlxDestroyable
 				_curAnim = null;
 			}
 			
-			var frame = _sprite.frames.framesHash.get(Value);
+			var frame = _owner.frames.framesHash.get(Value);
 			if (frame != null)
 			{
 				frameIndex = getFrameIndex(frame);
@@ -816,7 +785,7 @@ class FlxAnimationController implements IFlxDestroyable
 	
 	private inline function get_frames():Int
 	{
-		return _sprite.numFrames;
+		return _owner.numFrames;
 	}
 	
 	/**
@@ -826,6 +795,6 @@ class FlxAnimationController implements IFlxDestroyable
 	 */
 	public inline function getFrameIndex(Frame:FlxFrame):Int
 	{
-		return _sprite.frames.frames.indexOf(Frame);
+		return _owner.frames.frames.indexOf(Frame);
 	}
 }
