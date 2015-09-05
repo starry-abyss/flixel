@@ -1,7 +1,7 @@
 package flixel.graphics.views;
 
 import flash.display.BitmapData;
-import flixel.FlxImage;
+import flixel.FlxBaseSprite;
 import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.frames.FlxFramesCollection;
 import flixel.graphics.frames.FlxTileFrames;
@@ -50,7 +50,7 @@ class FlxGraphic implements IFlxDestroyable
 	 */
 	public var dirty:Bool = true;
 	
-	public var parent:FlxImage = null;
+	public var parent:FlxBaseSprite<Dynamic> = null;
 	
 	/**
 	 * Link to current FlxFrame from loaded atlas
@@ -133,7 +133,7 @@ class FlxGraphic implements IFlxDestroyable
 	
 	private var _point:FlxPoint;
 	
-	public function new(?Parent:FlxImage, ?Graphic:FlxGraphicAsset)
+	public function new(?Parent:FlxBaseSprite<Dynamic>, ?Graphic:FlxGraphicAsset)
 	{
 		parent = Parent;
 		active = true;

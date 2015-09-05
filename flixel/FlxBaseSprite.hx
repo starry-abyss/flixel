@@ -7,11 +7,11 @@ import flixel.util.FlxDestroyUtil;
  * ...
  * @author Zaphod
  */
-class FlxImage extends FlxObject
+class FlxBaseSprite<T:FlxGraphic> extends FlxObject
 {
-	public var graphic(default, set):FlxGraphic;
+	public var graphic(default, set):T;
 	
-	public function new(?X:Float = 0, ?Y:Float = 0, ?Graphic:FlxGraphic) 
+	public function new(?X:Float = 0, ?Y:Float = 0, ?Graphic:T) 
 	{
 		super(X, Y);
 		graphic = Graphic;
@@ -43,7 +43,7 @@ class FlxImage extends FlxObject
 			graphic.update(elapsed);
 	}
 	
-	private function set_graphic(Value:FlxGraphic):FlxGraphic
+	private function set_graphic(Value:T):T
 	{
 		graphic = Value;
 		
