@@ -132,11 +132,11 @@ class FlxPrerotated extends FlxImage
 		if (Camera == null)
 			Camera = FlxG.camera;
 		
-		var minX:Float = parent.x - offset.x - Camera.scroll.x * scrollFactor.x;
-		var minY:Float = parent.y - offset.y - Camera.scroll.y * scrollFactor.y;
-		
 		if ((angle == 0 || bakedRotationAngle > 0) && (scale.x == 1) && (scale.y == 1))
 		{
+			var minX:Float = parent.x - offset.x - Camera.scroll.x * scrollFactor.x;
+			var minY:Float = parent.y - offset.y - Camera.scroll.y * scrollFactor.y;
+			
 			if (minX > Camera.width || minX + frameWidth < 0)
 				return false;
 			
@@ -145,43 +145,7 @@ class FlxPrerotated extends FlxImage
 		}
 		else
 		{
-			var radiusX:Float = _halfSize.x;
-			var radiusY:Float = _halfSize.y;
-			
-			var ox:Float = origin.x;
-			if (ox != radiusX)
-			{
-				var x1:Float = Math.abs(ox);
-				var x2:Float = Math.abs(frameWidth - ox);
-				radiusX = Math.max(x2, x1);
-			}
-			
-			var oy:Float = origin.y;
-			if (oy != radiusY)
-			{
-				var y1:Float = Math.abs(oy);
-				var y2:Float = Math.abs(frameHeight - oy);
-				radiusY = Math.max(y2, y1);
-			}
-			
-			radiusX *= Math.abs(scale.x);
-			radiusY *= Math.abs(scale.y);
-			var radius:Float = Math.max(radiusX, radiusY);
-			radius *= FlxMath.SQUARE_ROOT_OF_TWO;
-			
-			minX += ox;
-			var maxX:Float = minX + radius;
-			minX -= radius;
-			
-			if (maxX < 0 || minX > Camera.width)
-				return false;
-			
-			minY += oy;
-			var maxY:Float = minY + radius;
-			minY -= radius;
-			
-			if (maxY < 0 || minY > Camera.height)
-				return false;
+			return super.isOnScreen(Camera);
 		}
 		
 		return true;
