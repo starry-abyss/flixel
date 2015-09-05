@@ -354,7 +354,7 @@ class FlxGraphic implements IFlxDestroyable
 			Camera = FlxG.camera;
 		}
 		getScreenPosition(_point, Camera);
-		return (_point.x + parent.width > 0) && (_point.x < Camera.width) && (_point.y + parent.height > 0) && (_point.y < Camera.height);
+		return (_point.x + frameWidth > 0) && (_point.x < Camera.width) && (_point.y + frameHeight > 0) && (_point.y < Camera.height);
 	}
 	
 	/**
@@ -627,5 +627,11 @@ class FlxGraphic implements IFlxDestroyable
 		}
 		
 		return point.set(pX + frameWidth * 0.5, pY + frameHeight * 0.5);
+	}
+	
+	// TODO: implement it here and in subclasses...
+	public function clone():FlxGraphic
+	{
+		return null;
 	}
 }
