@@ -15,7 +15,7 @@ import openfl.geom.Point;
 import openfl.geom.Rectangle;
 
 @:keep @:bitmap("assets/images/logo/default.png")
-private class GraphicDefault extends BitmapData {}
+class GraphicDefault extends BitmapData {}
 
 /**
  * ...
@@ -136,6 +136,14 @@ class FlxGraphic implements IFlxDestroyable
 	public function new(?Parent:FlxBaseSprite<Dynamic>, ?Graphic:FlxGraphicAsset)
 	{
 		parent = Parent;
+		initVars();
+		
+		if (Graphic != null)
+			loadGraphic(Graphic);
+	}
+	
+	private function initVars():Void 
+	{
 		active = true;
 		visible = true;
 		
@@ -147,9 +155,6 @@ class FlxGraphic implements IFlxDestroyable
 		scrollFactor = FlxPoint.get();
 		_matrix = new FlxMatrix();
 		_point = FlxPoint.get();
-		
-		if (Graphic != null)
-			loadGraphic(Graphic);
 	}
 	
 	/**
@@ -581,5 +586,46 @@ class FlxGraphic implements IFlxDestroyable
 		}
 		
 		return pixelPerfectRender == null ? Camera.pixelPerfectRender : pixelPerfectRender;
+	}
+	
+	/**
+	 * Checks to see if a point in 2D world space overlaps this FlxSprite object's current displayed pixels.
+	 * This check is ALWAYS made in screen space, and always takes scroll factors into account.
+	 * 
+	 * @param	Point		The point in world space you want to check.
+	 * @param	Mask		Used in the pixel hit test to determine what counts as solid.
+	 * @param	Camera		Specify which game camera you want.  If null getScreenPosition() will just grab the first global camera.
+	 * @return	Whether or not the point overlaps this object.
+	 */
+	public function pixelsOverlapPoint(point:FlxPoint, Mask:Int = 0xFF, ?Camera:FlxCamera):Bool
+	{
+		// TODO: implement it...
+		
+		return false;
+	}
+	
+	/**
+	 * Retrieve the midpoint of this sprite's graphic in world coordinates.
+	 * 
+	 * @param	point	Allows you to pass in an existing FlxPoint object if you're so inclined. Otherwise a new one is created.
+	 * @return	A FlxPoint object containing the midpoint of this sprite's graphic in world coordinates.
+	 */
+	public function getGraphicMidpoint(?point:FlxPoint):FlxPoint
+	{
+		if (point == null)
+		{
+			point = FlxPoint.get();
+		}
+		
+		var pX:Float = 0;
+		var pY:Float = 0;
+		
+		if (parent != null)
+		{
+			pX = parent.x;
+			pY = parent.y;
+		}
+		
+		return point.set(pX + frameWidth * 0.5, pY + frameHeight * 0.5);
 	}
 }
