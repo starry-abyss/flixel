@@ -52,7 +52,7 @@ class FlxDrawBaseItem<T>
 	
 	public var next:FlxDrawBaseItem<T>;
 	
-	public var graphics:FlxGraphic;
+	public var graphics:FlxTexture;
 	public var antialiasing:Bool = false;
 	public var colored:Bool = false;
 	public var blending:Int = 0;

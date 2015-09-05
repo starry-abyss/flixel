@@ -12,7 +12,7 @@ import flash.display.Graphics;
 import flash.media.Sound;
 import flash.text.Font;
 import flixel.FlxG;
-import flixel.graphics.FlxGraphic;
+import flixel.graphics.FlxTexture;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.graphics.frames.FlxTileFrames;
 import flixel.graphics.frames.FlxFramesCollection;
@@ -258,7 +258,7 @@ class FlxAssets
 	
 	public static function getVirtualInputFrames():FlxAtlasFrames
 	{
-		var graphic:FlxGraphic = FlxGraphic.fromClass(GraphicVirtualInput);
+		var graphic:FlxTexture = FlxTexture.fromClass(GraphicVirtualInput);
 		return FlxAtlasFrames.fromSpriteSheetPacker(graphic, Std.string(new VirtualInputData()));
 	}
 #end
@@ -287,8 +287,8 @@ private class FileReference
 #else
 typedef FlxAngelCodeSource = OneOfTwo<Xml, String>;
 typedef FlxSoundAsset = OneOfThree<String, Sound, Class<Sound>>;
-typedef FlxGraphicAsset = OneOfThree<FlxGraphic, BitmapData, String>;
+typedef FlxGraphicAsset = OneOfThree<FlxTexture, BitmapData, String>;
 typedef FlxGraphicSource = OneOfThree<BitmapData, Class<Dynamic>, String>;
-typedef FlxTilemapGraphicAsset = OneOfFour<FlxFramesCollection, FlxGraphic, BitmapData, String>;
-typedef FlxBitmapFontGraphicAsset = OneOfFour<FlxFrame, FlxGraphic, BitmapData, String>;
+typedef FlxTilemapGraphicAsset = OneOfFour<FlxFramesCollection, FlxTexture, BitmapData, String>;
+typedef FlxBitmapFontGraphicAsset = OneOfFour<FlxFrame, FlxTexture, BitmapData, String>;
 #end

@@ -3,7 +3,7 @@ package flixel.graphics.atlas;
 import flash.display.BitmapData;
 import flash.geom.Point;
 import flixel.FlxG;
-import flixel.graphics.FlxGraphic;
+import flixel.graphics.FlxTexture;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.graphics.frames.FlxFrame.FlxFrameAngle;
 import flixel.graphics.frames.FlxTileFrames;
@@ -631,7 +631,7 @@ class FlxAtlas implements IFlxDestroyable
 	 */
 	public function getAtlasFrames():FlxAtlasFrames
 	{
-		var graphic:FlxGraphic = FlxG.bitmap.add(this.bitmapData, false, name);
+		var graphic:FlxTexture = FlxG.bitmap.add(this.bitmapData, false, name);
 		
 		var atlasFrames:FlxAtlasFrames = graphic.atlasFrames;
 		if (graphic.atlasFrames == null)
@@ -647,7 +647,7 @@ class FlxAtlas implements IFlxDestroyable
 	
 	private function addNodeToAtlasFrames(node:FlxNode):Void
 	{
-		var graphic:FlxGraphic = FlxG.bitmap.get(name);
+		var graphic:FlxTexture = FlxG.bitmap.get(name);
 		if (graphic == null || graphic.atlasFrames == null || node == null)
 			return;
 		
@@ -937,7 +937,7 @@ class FlxAtlas implements IFlxDestroyable
 		if (value != null)
 		{
 			// update graphic bitmapData
-			var graphic:FlxGraphic = FlxG.bitmap.get(name);
+			var graphic:FlxTexture = FlxG.bitmap.get(name);
 			if (graphic != null)
 			{
 				graphic.bitmap = value;

@@ -3,7 +3,7 @@ package flixel.graphics.frames;
 import flash.display.BitmapData;
 import flash.geom.Point;
 import flash.geom.Rectangle;
-import flixel.graphics.FlxGraphic;
+import flixel.graphics.FlxTexture;
 import flixel.graphics.frames.FlxFrame;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
@@ -45,7 +45,7 @@ class FlxFrame implements IFlxDestroyable
 	 */
 	public var uv:FlxRect;
 	
-	public var parent:FlxGraphic;
+	public var parent:FlxTexture;
 	
 	/**
 	 * Rotation angle of this frame. 
@@ -77,7 +77,7 @@ class FlxFrame implements IFlxDestroyable
 	private var blitMatrix:Vector<Float>;
 	
 	@:allow(flixel)
-	private function new(parent:FlxGraphic, angle:FlxFrameAngle = FlxFrameAngle.ANGLE_0, flipX:Bool = false, flipY:Bool = false)
+	private function new(parent:FlxTexture, angle:FlxFrameAngle = FlxFrameAngle.ANGLE_0, flipX:Bool = false, flipY:Bool = false)
 	{
 		this.parent = parent;
 		this.angle = angle;

@@ -1,7 +1,7 @@
 package flixel.graphics.frames;
 
 import flash.geom.Rectangle;
-import flixel.graphics.FlxGraphic;
+import flixel.graphics.FlxTexture;
 import flixel.graphics.frames.FlxFrame.FlxFrameAngle;
 import flixel.graphics.frames.FlxFramesCollection;
 import flixel.math.FlxPoint;
@@ -17,21 +17,21 @@ import openfl.Assets;
  */
 class FlxAtlasFrames extends FlxFramesCollection
 {
-	public function new(parent:FlxGraphic, border:FlxPoint = null) 
+	public function new(parent:FlxTexture, border:FlxPoint = null) 
 	{
 		super(parent, FlxFrameCollectionType.ATLAS, border);
 	}
 	
 	/**
 	 * Parsing method for TexturePacker atlases in json format.
-	 * @param	Source			the image source (can be FlxGraphic, String, or BitmapData).
+	 * @param	Source			the image source (can be FlxTexture, String, or BitmapData).
 	 * @param	Description		contents of json file with atlas description. You can get it with Assets.getText(path/to/description.json).
 	 * 							Or you can just pass path to json file in assets directory.
 	 * @return	Newly created AtlasFrames collection
 	 */
 	public static function fromTexturePackerJson(Source:FlxGraphicAsset, Description:String):FlxAtlasFrames
 	{
-		var graphic:FlxGraphic = FlxG.bitmap.add(Source, false);
+		var graphic:FlxTexture = FlxG.bitmap.add(Source, false);
 		if (graphic == null)	return null;
 		
 		// No need to parse data again
@@ -102,14 +102,14 @@ class FlxAtlasFrames extends FlxFramesCollection
 	/**
 	 * Parsing method for LibGDX atlases.
 	 * 
-	 * @param	Source			the image source (can be FlxGraphic, String or BitmapData).
+	 * @param	Source			the image source (can be FlxTexture, String or BitmapData).
 	 * @param	Description		contents of the file with atlas description. You can get it with Assets.getText(path/to/description/file).
 	 * 							Or you can just pass path to description file in assets directory.
 	 * @return	Newly created AtlasFrames collection
 	 */
 	public static function fromLibGdx(Source:FlxGraphicAsset, Description:String):FlxAtlasFrames
 	{
-		var graphic:FlxGraphic = FlxG.bitmap.add(Source);
+		var graphic:FlxTexture = FlxG.bitmap.add(Source);
 		if (graphic == null)	return null;
 		
 		// No need to parse data again
@@ -216,14 +216,14 @@ class FlxAtlasFrames extends FlxFramesCollection
 	/**
 	 * Parsing method for Sparrow texture atlases (they can be generated with Shoebox http://renderhjs.net/shoebox/ for example).
 	 * 
-	 * @param	Source			the image source (can be FlxGraphic, String or BitmapData).
+	 * @param	Source			the image source (can be FlxTexture, String or BitmapData).
 	 * @param	Description		contents of xml file with atlas description. You can get it with Assets.getText(path/to/description.xml)
 	 * 							Or you can just pass path to xml file in assets directory.
 	 * @return	Newly created AtlasFrames collection.
 	 */
 	public static function fromSparrow(Source:FlxGraphicAsset, Description:String):FlxAtlasFrames
 	{
-		var graphic:FlxGraphic = FlxG.bitmap.add(Source);
+		var graphic:FlxTexture = FlxG.bitmap.add(Source);
 		if (graphic == null)	return null;
 		
 		// No need to parse data again
@@ -291,14 +291,14 @@ class FlxAtlasFrames extends FlxFramesCollection
 	/**
 	 * Parsing method for TexturePacker atlases in generic xml format
 	 * 
-	 * @param	Source			the image source (can be FlxGraphic, String or BitmapData).
+	 * @param	Source			the image source (can be FlxTexture, String or BitmapData).
 	 * @param	Description		contents of xml file with atlas description. You can get it with Assets.getText(path/to/description.xml)
 	 * 							Or you can just pass path to xml file in assets directory.
 	 * @return	Newly created AtlasFrames collection.
 	 */
 	public static function fromTexturePackerXml(Source:FlxGraphicAsset, Description:String):FlxAtlasFrames
 	{
-		var graphic:FlxGraphic = FlxG.bitmap.add(Source, false);
+		var graphic:FlxTexture = FlxG.bitmap.add(Source, false);
 		if (graphic == null)	return null;
 		
 		// No need to parse data again
@@ -351,14 +351,14 @@ class FlxAtlasFrames extends FlxFramesCollection
 	/**
 	 * Parsing method for Sprite Sheet Packer atlases (http://spritesheetpacker.codeplex.com/).
 	 * 
-	 * @param	Source			the image source (can be FlxGraphic, String or BitmapData).
+	 * @param	Source			the image source (can be FlxTexture, String or BitmapData).
 	 * @param	Description		contents of the file with atlas description. You can get it with Assets.getText(path/to/description/file).
 	 * 							Or you can just pass path to description file in assets directory.
 	 * @return	Newly created AtlasFrames collection
 	 */
 	public static function fromSpriteSheetPacker(Source:FlxGraphicAsset, Description:String):FlxAtlasFrames
 	{
-		var graphic:FlxGraphic = FlxG.bitmap.add(Source);
+		var graphic:FlxTexture = FlxG.bitmap.add(Source);
 		if (graphic == null)	return null;
 		
 		// No need to parse data again
@@ -405,12 +405,12 @@ class FlxAtlasFrames extends FlxFramesCollection
 	}
 	
 	/**
-	 * Return AtlasFrame of the specified FlxGraphic object.
+	 * Return AtlasFrame of the specified FlxTexture object.
 	 * 
-	 * @param	graphic	FlxGraphic object to find AtlasFrames collection for.
-	 * @return	AtlasFrames Collection for specified FlxGraphic object. Could be null, if FlxGraphic doesn't have it yet.
+	 * @param	graphic	FlxTexture object to find AtlasFrames collection for.
+	 * @return	AtlasFrames Collection for specified FlxTexture object. Could be null, if FlxTexture doesn't have it yet.
 	 */
-	public static function findFrame(graphic:FlxGraphic, border:FlxPoint = null):FlxAtlasFrames
+	public static function findFrame(graphic:FlxTexture, border:FlxPoint = null):FlxAtlasFrames
 	{
 		if (border == null)
 		{

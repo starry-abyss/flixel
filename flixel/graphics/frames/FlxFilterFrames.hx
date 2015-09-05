@@ -4,7 +4,7 @@ import flash.display.BitmapData;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 import flixel.FlxSprite;
-import flixel.graphics.FlxGraphic;
+import flixel.graphics.FlxTexture;
 import flixel.graphics.frames.FlxFramesCollection.FlxFrameCollectionType;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
@@ -97,14 +97,14 @@ class FlxFilterFrames extends FlxFramesCollection
 	private function genFrames():Void
 	{
 		var canvas:BitmapData;
-		var graph:FlxGraphic;
+		var graph:FlxTexture;
 		var region:FlxRect;
 		var filterFrame:FlxFrame;
 		
 		for (frame in sourceFrames.frames)
 		{
 			canvas = new BitmapData(Std.int(frame.sourceSize.x + widthInc), Std.int(frame.sourceSize.y + heightInc), true, FlxColor.TRANSPARENT);
-			graph = FlxGraphic.fromBitmapData(canvas, false, null, false);
+			graph = FlxTexture.fromBitmapData(canvas, false, null, false);
 			
 			filterFrame = graph.imageFrame.frame;
 			

@@ -8,7 +8,7 @@ import flash.geom.Rectangle;
 import flixel.animation.FlxAnimationController;
 import flixel.FlxBasic;
 import flixel.FlxG;
-import flixel.graphics.FlxGraphic;
+import flixel.graphics.FlxTexture;
 import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.frames.FlxFramesCollection;
 import flixel.graphics.frames.FlxTileFrames;
@@ -85,7 +85,7 @@ class FlxSprite extends FlxObject
 	 * Rendering variables.
 	 */
 	public var frames(default, set):FlxFramesCollection;
-	public var graphic(default, set):FlxGraphic;
+	public var texture(default, set):FlxTexture;
 	/**
 	 * The minimum angle (out of 360°) for which a new baked rotation exists. Example: 90 means there 
 	 * are 4 baked rotations in the spritesheet. 0 if this sprite does not have any baked rotations.
@@ -262,7 +262,7 @@ class FlxSprite extends FlxObject
 		_frame = FlxDestroyUtil.destroy(_frame);
 		
 		frames = null;
-		graphic = null;
+		texture = null;
 	}
 	
 	public function clone():FlxSprite
@@ -313,7 +313,7 @@ class FlxSprite extends FlxObject
 	 */
 	public function loadGraphic(Graphic:FlxGraphicAsset, Animated:Bool = false, Width:Int = 0, Height:Int = 0, Unique:Bool = false, ?Key:String):FlxSprite
 	{
-		var graph:FlxGraphic = FlxG.bitmap.add(Graphic, Unique, Key);
+		var graph:FlxTexture = FlxG.bitmap.add(Graphic, Unique, Key);
 		if (graph == null)
 		{
 			return this;
@@ -357,7 +357,7 @@ class FlxSprite extends FlxObject
 	 */
 	public function loadRotatedGraphic(Graphic:FlxGraphicAsset, Rotations:Int = 16, Frame:Int = -1, AntiAliasing:Bool = false, AutoBuffer:Bool = false, ?Key:String):FlxSprite
 	{
-		var brushGraphic:FlxGraphic = FlxG.bitmap.add(Graphic, false, Key);
+		var brushGraphic:FlxTexture = FlxG.bitmap.add(Graphic, false, Key);
 		if (brushGraphic == null)
 		{
 			return this;
@@ -383,11 +383,11 @@ class FlxSprite extends FlxObject
 		key = key + ":" + Rotations + ":" + AutoBuffer;
 		
 		//Generate a new sheet if necessary, then fix up the width and height
-		var tempGraph:FlxGraphic = FlxG.bitmap.get(key);
+		var tempGraph:FlxTexture = FlxG.bitmap.get(key);
 		if (tempGraph == null)
 		{
 			var bitmap:BitmapData = FlxBitmapDataUtil.generateRotations(brush, Rotations, AntiAliasing, AutoBuffer);
-			tempGraph = FlxGraphic.fromBitmapData(bitmap, false, key);
+			tempGraph = FlxTexture.fromBitmapData(bitmap, false, key);
 		}
 		
 		var max:Int = (brush.height > brush.width) ? brush.height : brush.width;
@@ -409,7 +409,7 @@ class FlxSprite extends FlxObject
 	
 	/**
 	 * Helper method which makes it possible to use FlxFrames as graphic source for sprite's loadRotatedGraphic() method 
-	 * (since it accepts only FlxGraphic, BitmapData and String types).
+	 * (since it accepts only FlxTexture, BitmapData and String types).
 	 * 
 	 * @param	frame			Frame to load into this sprite.
 	 * @param	rotations		The number of rotation frames the final sprite should have. For small sprites this can be quite a large number (360 even) without any problems.
@@ -429,10 +429,10 @@ class FlxSprite extends FlxObject
 			key += ":" + Frame.frame.toString();
 		}
 		
-		var graphic:FlxGraphic = FlxG.bitmap.get(key);
+		var graphic:FlxTexture = FlxG.bitmap.get(key);
 		if (graphic == null)
 		{
-			graphic = FlxGraphic.fromBitmapData(Frame.paint(), false, key);
+			graphic = FlxTexture.fromBitmapData(Frame.paint(), false, key);
 		}
 		
 		return loadRotatedGraphic(graphic, Rotations, -1, AntiAliasing, AutoBuffer);
@@ -456,7 +456,7 @@ class FlxSprite extends FlxObject
 	 */
 	public function makeGraphic(Width:Int, Height:Int, Color:FlxColor = FlxColor.WHITE, Unique:Bool = false, ?Key:String):FlxSprite
 	{
-		var graph:FlxGraphic = FlxG.bitmap.create(Width, Height, Color, Unique, Key);
+		var graph:FlxTexture = FlxG.bitmap.create(Width, Height, Color, Unique, Key);
 		frames = graph.imageFrame;
 		return this;
 	}
@@ -551,10 +551,10 @@ class FlxSprite extends FlxObject
 		_flashRect2.x = 0;
 		_flashRect2.y = 0;
 		
-		if (graphic != null)
+		if (texture != null)
 		{
-			_flashRect2.width = graphic.width;
-			_flashRect2.height = graphic.height;
+			_flashRect2.width = texture.width;
+			_flashRect2.height = texture.height;
 		}
 		
 		centerOrigin();
@@ -587,7 +587,7 @@ class FlxSprite extends FlxObject
 		if (_frame == null)
 		{
 			#if !FLX_NO_DEBUG
-			loadGraphic(FlxGraphic.fromClass(GraphicDefault));
+			loadGraphic(FlxTexture.fromClass(GraphicDefault));
 			#else
 			return;
 			#end
@@ -676,7 +676,7 @@ class FlxSprite extends FlxObject
 	 */
 	public function stamp(Brush:FlxSprite, X:Int = 0, Y:Int = 0):Void
 	{
-		if (this.graphic == null || Brush.graphic == null)
+		if (this.texture == null || Brush.texture == null)
 		{
 			throw "Cannot stamp to or from a FlxSprite with no graphics.";
 		}
@@ -689,9 +689,9 @@ class FlxSprite extends FlxObject
 			_flashPoint.y = Y + frame.frame.y;
 			_flashRect2.width = bitmapData.width;
 			_flashRect2.height = bitmapData.height;
-			graphic.bitmap.copyPixels(bitmapData, _flashRect2, _flashPoint, null, null, true);
-			_flashRect2.width = graphic.bitmap.width;
-			_flashRect2.height = graphic.bitmap.height;
+			texture.bitmap.copyPixels(bitmapData, _flashRect2, _flashPoint, null, null, true);
+			_flashRect2.width = texture.bitmap.width;
+			_flashRect2.height = texture.bitmap.height;
 			#if FLX_RENDER_BLIT
 			dirty = true;
 			calcFrame();
@@ -708,7 +708,7 @@ class FlxSprite extends FlxObject
 			}
 			_matrix.translate(X + frame.frame.x + Brush.origin.x, Y + frame.frame.y + Brush.origin.y);
 			var brushBlend:BlendMode = Brush.blend;
-			graphic.bitmap.draw(bitmapData, _matrix, null, brushBlend, null, Brush.antialiasing);
+			texture.bitmap.draw(bitmapData, _matrix, null, brushBlend, null, Brush.antialiasing);
 			#if FLX_RENDER_BLIT
 			dirty = true;
 			calcFrame();
@@ -772,7 +772,7 @@ class FlxSprite extends FlxObject
 	 */
 	public function replaceColor(Color:FlxColor, NewColor:FlxColor, FetchPositions:Bool = false):Array<FlxPoint>
 	{
-		var positions:Array<FlxPoint> = FlxBitmapDataUtil.replaceColor(graphic.bitmap, Color, NewColor, FetchPositions);
+		var positions:Array<FlxPoint> = FlxBitmapDataUtil.replaceColor(texture.bitmap, Color, NewColor, FetchPositions);
 		if (positions != null)
 		{
 			dirty = true;
@@ -880,7 +880,7 @@ class FlxSprite extends FlxObject
 	{
 		if (frame == null)	
 		{
-			loadGraphic(FlxGraphic.fromClass(GraphicDefault));
+			loadGraphic(FlxTexture.fromClass(GraphicDefault));
 		}
 		
 		#if FLX_RENDER_TILE
@@ -1093,12 +1093,12 @@ class FlxSprite extends FlxObject
 	private function get_pixels():BitmapData
 	{
 		#if !FLX_NO_DEBUG
-		if (graphic == null)
+		if (texture == null)
 		{
 			throw "FlxSprite object doesn't have any graphic! Please load graphic or call makeGraphic() on the sprite before trying to retrieve its graphic.";
 		}
 		#end
-		return graphic.bitmap;
+		return texture.bitmap;
 	}
 	
 	private function set_pixels(Pixels:BitmapData):BitmapData
@@ -1108,14 +1108,14 @@ class FlxSprite extends FlxObject
 		if (key == null)
 		{
 			key = FlxG.bitmap.getUniqueKey();
-			graphic = FlxG.bitmap.add(Pixels, false, key);
+			texture = FlxG.bitmap.add(Pixels, false, key);
 		}
 		else
 		{
-			graphic = FlxG.bitmap.get(key);
+			texture = FlxG.bitmap.get(key);
 		}
 		
-		frames = graphic.imageFrame;
+		frames = texture.imageFrame;
 		return Pixels;
 	}
 	
@@ -1207,11 +1207,11 @@ class FlxSprite extends FlxObject
 	 * Internal function for setting graphic property for this object. 
 	 * It changes graphics' useCount also for better memory tracking.
 	 */
-	private function set_graphic(Value:FlxGraphic):FlxGraphic
+	private function set_texture(Value:FlxTexture):FlxTexture
 	{
-		var oldGraphic:FlxGraphic = graphic;
+		var oldGraphic:FlxTexture = texture;
 		
-		if ((graphic != Value) && (Value != null))
+		if ((texture != Value) && (Value != null))
 		{
 			Value.useCount++;
 		}
@@ -1221,7 +1221,7 @@ class FlxSprite extends FlxObject
 			oldGraphic.useCount--;
 		}
 		
-		return graphic = Value;
+		return texture = Value;
 	}
 	
 	private function set_clipRect(rect:FlxRect):FlxRect
@@ -1259,7 +1259,7 @@ class FlxSprite extends FlxObject
 		
 		if (Frames != null)
 		{
-			graphic = Frames.parent;
+			texture = Frames.parent;
 			frames = Frames;
 			frame = frames.getByIndex(0);
 			numFrames = frames.numFrames;
@@ -1272,7 +1272,7 @@ class FlxSprite extends FlxObject
 		{
 			frames = null;
 			frame = null;
-			graphic = null;
+			texture = null;
 		}
 		
 		clipRect = null;

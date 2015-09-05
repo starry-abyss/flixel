@@ -6,7 +6,7 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.graphics.atlas.FlxAtlas;
 import flixel.graphics.atlas.FlxNode;
-import flixel.graphics.FlxGraphic;
+import flixel.graphics.FlxTexture;
 import flixel.graphics.frames.FlxTileFrames;
 import flixel.input.FlxInput;
 import flixel.input.FlxPointer;
@@ -235,7 +235,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 	
 	private function loadDefaultGraphic():Void
 	{
-		loadGraphic(FlxGraphic.fromClass(GraphicButton), true, 80, 20);
+		loadGraphic(FlxTexture.fromClass(GraphicButton), true, 80, 20);
 	}
 	
 	private function setupAnimation(animationName:String, frameIndex:Int):Void
@@ -339,7 +339,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 	 */
 	public function stampOnAtlas(atlas:FlxAtlas):Bool
 	{
-		var buttonNode:FlxNode = atlas.addNode(graphic.bitmap, graphic.key);
+		var buttonNode:FlxNode = atlas.addNode(texture.bitmap, texture.key);
 		var result:Bool = (buttonNode != null);
 		
 		if (buttonNode != null)
@@ -352,7 +352,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 		
 		if (result && label != null)
 		{
-			var labelNode:FlxNode = atlas.addNode(label.graphic.bitmap, label.graphic.key);
+			var labelNode:FlxNode = atlas.addNode(label.texture.bitmap, label.texture.key);
 			result = result && (labelNode != null);
 			
 			if (labelNode != null)

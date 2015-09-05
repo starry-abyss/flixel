@@ -9,7 +9,7 @@ import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
-import flixel.graphics.FlxGraphic;
+import flixel.graphics.FlxTexture;
 import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.frames.FlxFramesCollection;
 import flixel.graphics.frames.FlxImageFrame;
@@ -69,7 +69,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	 * Rendering variables.
 	 */
 	public var frames(default, set):FlxFramesCollection;
-	public var graphic(default, set):FlxGraphic;
+	public var graphic(default, set):FlxTexture;
 	
 	/**
 	 * Tints the whole sprite to a color (0xRRGGBB format) - similar to OpenGL vertex colors. You can use
@@ -240,7 +240,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 			return;
 		}
 		
-		var graph:FlxGraphic = FlxG.bitmap.add(cast TileGraphic);
+		var graph:FlxTexture = FlxG.bitmap.add(cast TileGraphic);
 		if (graph == null)
 		{
 			return;
@@ -1072,7 +1072,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	 * Internal function for setting graphic property for this object. 
 	 * It changes graphic' useCount also for better memory tracking.
 	 */
-	private function set_graphic(Value:FlxGraphic):FlxGraphic
+	private function set_graphic(Value:FlxTexture):FlxTexture
 	{
 		//If graphics are changing
 		if (graphic != Value)

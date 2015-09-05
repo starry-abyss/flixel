@@ -1,6 +1,6 @@
 package flixel.graphics.frames;
 
-import flixel.graphics.FlxGraphic;
+import flixel.graphics.FlxTexture;
 import flixel.graphics.frames.FlxFrame.FlxFrameAngle;
 import flixel.graphics.frames.FlxFrame.FlxFrameType;
 import flixel.math.FlxPoint;
@@ -34,7 +34,7 @@ class FlxFramesCollection implements IFlxDestroyable
 	/**
 	 * Graphic object this frames belongs to.
 	 */
-	public var parent:FlxGraphic;
+	public var parent:FlxTexture;
 	
 	/**
 	 * Type of this frame collection.
@@ -48,7 +48,7 @@ class FlxFramesCollection implements IFlxDestroyable
 	 */
 	public var border(default, null):FlxPoint;
 	
-	public function new(parent:FlxGraphic, type:FlxFrameCollectionType = null, border:FlxPoint = null)
+	public function new(parent:FlxTexture, type:FlxFrameCollectionType = null, border:FlxPoint = null)
 	{
 		this.parent = parent;
 		this.type = type;

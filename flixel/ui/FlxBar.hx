@@ -7,7 +7,7 @@ import flixel.FlxBasic;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.graphics.FlxGraphic;
+import flixel.graphics.FlxTexture;
 import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.frames.FlxFramesCollection;
 import flixel.graphics.frames.FlxImageFrame;
@@ -621,7 +621,7 @@ class FlxBar extends FlxSprite
 	{
 		if (empty != null)
 		{
-			var emptyGraphic:FlxGraphic = FlxG.bitmap.add(empty);
+			var emptyGraphic:FlxTexture = FlxG.bitmap.add(empty);
 		
 			#if FLX_RENDER_TILE
 			frames = emptyGraphic.imageFrame;
@@ -633,7 +633,7 @@ class FlxBar extends FlxSprite
 			
 			_emptyBarRect.setTo(0, 0, barWidth, barHeight);
 			
-			if (graphic == null || (frame.sourceSize.x != barWidth || frame.sourceSize.y != barHeight))
+			if (texture == null || (frame.sourceSize.x != barWidth || frame.sourceSize.y != barHeight))
 			{
 				makeGraphic(barWidth, barHeight, FlxColor.TRANSPARENT, true);
 			}
@@ -660,7 +660,7 @@ class FlxBar extends FlxSprite
 	{
 		if (fill != null)
 		{
-			var filledGraphic:FlxGraphic = FlxG.bitmap.add(fill);
+			var filledGraphic:FlxTexture = FlxG.bitmap.add(fill);
 		
 			#if FLX_RENDER_TILE
 			frontFrames = filledGraphic.imageFrame;
@@ -669,7 +669,7 @@ class FlxBar extends FlxSprite
 			
 			_filledBarRect.setTo(0, 0, barWidth, barHeight);
 			
-			if (graphic == null || (frame.sourceSize.x != barWidth || frame.sourceSize.y != barHeight))
+			if (texture == null || (frame.sourceSize.x != barWidth || frame.sourceSize.y != barHeight))
 			{
 				makeGraphic(barWidth, barHeight, FlxColor.TRANSPARENT, true);
 			}

@@ -2,7 +2,7 @@ package flixel.tile;
 
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.graphics.FlxGraphic;
+import flixel.graphics.FlxTexture;
 import flixel.graphics.frames.FlxTileFrames;
 import flixel.math.FlxPoint;
 import flixel.system.FlxAssets.FlxGraphicAsset;
@@ -136,7 +136,7 @@ class FlxTileblock extends FlxSprite
 			return this;
 		}
 		
-		var graph:FlxGraphic = FlxG.bitmap.add(TileGraphic);
+		var graph:FlxTexture = FlxG.bitmap.add(TileGraphic);
 		if (graph == null)
 		{
 			return this;

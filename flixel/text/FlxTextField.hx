@@ -79,7 +79,7 @@ class FlxTextField extends FlxText
 	override private function get_pixels():BitmapData
 	{
 		calcFrame(true);
-		return graphic.bitmap;
+		return texture.bitmap;
 	}
 	
 	override private function set_pixels(Pixels:BitmapData):BitmapData

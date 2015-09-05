@@ -11,7 +11,7 @@ import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.graphics.atlas.FlxAtlas;
 import flixel.graphics.atlas.FlxNode;
-import flixel.graphics.FlxGraphic;
+import flixel.graphics.FlxTexture;
 import flixel.graphics.frames.FlxFramesCollection;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
@@ -246,7 +246,7 @@ class FlxText extends FlxSprite
 			regenGraphics();
 		}
 		
-		var node:FlxNode = atlas.addNode(graphic.bitmap, graphic.key);
+		var node:FlxNode = atlas.addNode(texture.bitmap, texture.key);
 		var result:Bool = (node != null);
 		
 		if (node != null)
@@ -711,10 +711,10 @@ class FlxText extends FlxSprite
 		return Value;
 	}
 	
-	override private function set_graphic(Value:FlxGraphic):FlxGraphic 
+	override private function set_texture(Value:FlxTexture):FlxTexture 
 	{
-		var oldGraphic:FlxGraphic = graphic;
-		var graph:FlxGraphic = super.set_graphic(Value);
+		var oldGraphic:FlxTexture = texture;
+		var graph:FlxTexture = super.set_texture(Value);
 		FlxG.bitmap.removeIfNoUse(oldGraphic);
 		return graph;
 	}
@@ -759,10 +759,10 @@ class FlxText extends FlxSprite
 		var oldWidth:Int = 0;
 		var oldHeight:Int = VERTICAL_GUTTER;
 		
-		if (graphic != null)
+		if (texture != null)
 		{
-			oldWidth = graphic.width;
-			oldHeight = graphic.height;
+			oldWidth = texture.width;
+			oldHeight = texture.height;
 		}
 		
 		var newWidth:Float = textField.width;
@@ -783,7 +783,7 @@ class FlxText extends FlxSprite
 			
 			makeGraphic(Std.int(newWidth), Std.int(newHeight), FlxColor.TRANSPARENT, false, key);
 			if (_hasBorderAlpha)
-				_borderPixels = graphic.bitmap.clone();
+				_borderPixels = texture.bitmap.clone();
 			frameHeight = Std.int(height);
 			textField.height = height * 1.2;
 			_flashRect.x = 0;
@@ -793,7 +793,7 @@ class FlxText extends FlxSprite
 		}
 		else // Else just clear the old buffer before redrawing the text
 		{
-			graphic.bitmap.fillRect(_flashRect, FlxColor.TRANSPARENT);
+			texture.bitmap.fillRect(_flashRect, FlxColor.TRANSPARENT);
 			if (_hasBorderAlpha)
 			{
 				if (_borderPixels == null)
@@ -831,7 +831,7 @@ class FlxText extends FlxSprite
 			applyBorderTransparency();
 			applyFormats(_formatAdjusted, false);
 			
-			graphic.bitmap.draw(textField, _matrix);
+			texture.bitmap.draw(textField, _matrix);
 		}
 		
 		_regen = false;
@@ -943,7 +943,7 @@ class FlxText extends FlxSprite
 			
 		_borderColorTransform.alphaMultiplier = borderColor.alphaFloat;
 		_borderPixels.colorTransform(_borderPixels.rect, _borderColorTransform);
-		graphic.bitmap.draw(_borderPixels);
+		texture.bitmap.draw(_borderPixels);
 	}
 	
 	/**
@@ -951,7 +951,7 @@ class FlxText extends FlxSprite
 	 */
 	private inline function copyTextWithOffset(x:Float, y:Float)
 	{
-		var graphic:BitmapData = _hasBorderAlpha ? _borderPixels : graphic.bitmap;
+		var graphic:BitmapData = _hasBorderAlpha ? _borderPixels : texture.bitmap;
 		_matrix.translate(x, y);
 		graphic.draw(textField, _matrix);
 	}

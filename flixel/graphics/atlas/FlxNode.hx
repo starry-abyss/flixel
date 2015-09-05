@@ -1,6 +1,6 @@
 package flixel.graphics.atlas;
 
-import flixel.graphics.FlxGraphic;
+import flixel.graphics.FlxTexture;
 import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.frames.FlxImageFrame;
 import flixel.graphics.frames.FlxTileFrames;
@@ -109,7 +109,7 @@ class FlxNode implements IFlxDestroyable
 	 */
 	public function getTileFrames(tileSize:FlxPoint, tileSpacing:FlxPoint = null, tileBorder:FlxPoint = null):FlxTileFrames
 	{
-		var graphic:FlxGraphic = FlxG.bitmap.add(atlas.bitmapData, false, atlas.name);
+		var graphic:FlxTexture = FlxG.bitmap.add(atlas.bitmapData, false, atlas.name);
 		var frame:FlxFrame = atlas.getAtlasFrames().getByName(key);
 		
 		if (frame != null)
@@ -131,7 +131,7 @@ class FlxNode implements IFlxDestroyable
 	 */
 	public function getImageFrame():FlxImageFrame
 	{
-		var graphic:FlxGraphic = FlxG.bitmap.add(atlas.bitmapData, false, atlas.name);
+		var graphic:FlxTexture = FlxG.bitmap.add(atlas.bitmapData, false, atlas.name);
 		var frame = atlas.getAtlasFrames().getByName(key);
 		
 		if (frame != null)

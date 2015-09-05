@@ -4,7 +4,7 @@ import flash.display.BitmapData;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 import flixel.FlxG;
-import flixel.graphics.FlxGraphic;
+import flixel.graphics.FlxTexture;
 import flixel.graphics.frames.FlxFrame.FlxFrameAngle;
 import flixel.graphics.frames.FlxFramesCollection;
 import flixel.math.FlxPoint;
@@ -103,7 +103,7 @@ class FlxBitmapFont extends FlxFramesCollection
 	 */
 	public static function getDefaultFont():FlxBitmapFont
 	{
-		var graphic:FlxGraphic = FlxG.bitmap.get(defaultFontKey);
+		var graphic:FlxTexture = FlxG.bitmap.get(defaultFontKey);
 		if (graphic != null)
 		{
 			var font:FlxBitmapFont = FlxBitmapFont.findFont(graphic.imageFrame.frame);
@@ -160,7 +160,7 @@ class FlxBitmapFont extends FlxFramesCollection
 	 */
 	public static function fromAngelCode(Source:FlxBitmapFontGraphicAsset, Data:FlxAngelCodeSource):FlxBitmapFont
 	{
-		var graphic:FlxGraphic = null;
+		var graphic:FlxTexture = null;
 		var frame:FlxFrame = null;
 		
 		if (Std.is(Source, FlxFrame))
@@ -295,7 +295,7 @@ class FlxBitmapFont extends FlxFramesCollection
 	 */
 	public static function fromXNA(source:FlxBitmapFontGraphicAsset, letters:String = null, charBGColor:Int = FlxColor.TRANSPARENT):FlxBitmapFont
 	{
-		var graphic:FlxGraphic = null;
+		var graphic:FlxTexture = null;
 		var frame:FlxFrame = null;
 		
 		if (Std.is(source, FlxFrame))
@@ -471,7 +471,7 @@ class FlxBitmapFont extends FlxFramesCollection
 	 */
 	public static function fromMonospace(source:FlxBitmapFontGraphicAsset, letters:String = null, charSize:FlxPoint, region:FlxRect = null, spacing:FlxPoint = null):FlxBitmapFont
 	{
-		var graphic:FlxGraphic = null;
+		var graphic:FlxTexture = null;
 		var frame:FlxFrame = null;
 		
 		if (Std.is(source, FlxFrame))

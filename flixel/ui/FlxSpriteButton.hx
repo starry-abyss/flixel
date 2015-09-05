@@ -1,7 +1,7 @@
 package flixel.ui;
 
 import flixel.FlxSprite;
-import flixel.graphics.FlxGraphic;
+import flixel.graphics.FlxTexture;
 import flixel.graphics.frames.FlxImageFrame;
 import flixel.input.IFlxInput;
 import flixel.text.FlxText;
@@ -52,8 +52,8 @@ class FlxSpriteButton extends FlxTypedButton<FlxSprite> implements IFlxInput
 			text.setFormat(font, size, color, align);
 			text.alpha = labelAlphas[status];
 			text.drawFrame(true);
-			var labelBitmap:BitmapData = text.graphic.bitmap.clone();
-			var labelKey:String = text.graphic.key;
+			var labelBitmap:BitmapData = text.texture.bitmap.clone();
+			var labelKey:String = text.texture.key;
 			text.destroy();
 			
 			if (label == null)
@@ -61,7 +61,7 @@ class FlxSpriteButton extends FlxTypedButton<FlxSprite> implements IFlxInput
 				label = new FlxSprite();
 			}
 			
-			var labelGraphic:FlxGraphic = FlxG.bitmap.add(labelBitmap, false, labelKey);
+			var labelGraphic:FlxTexture = FlxG.bitmap.add(labelBitmap, false, labelKey);
 			label.frames = FlxImageFrame.fromGraphic(labelGraphic);
 		}
 		
