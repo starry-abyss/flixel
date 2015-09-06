@@ -3,6 +3,7 @@ package flixel.ui;
 import flash.display.BitmapData;
 import flash.geom.Point;
 import flash.geom.Rectangle;
+import flixel.FlxBaseSprite;
 import flixel.FlxBasic;
 import flixel.FlxCamera;
 import flixel.FlxG;
@@ -12,6 +13,7 @@ import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.frames.FlxFramesCollection;
 import flixel.graphics.frames.FlxImageFrame;
 import flixel.graphics.tile.FlxDrawTilesItem;
+import flixel.graphics.views.FlxBarView;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.ui.FlxBar.FlxBarFillDirection;
 import flixel.math.FlxAngle;
@@ -32,7 +34,7 @@ import flixel.util.FlxStringUtil;
  * @link http://www.photonstorm.com
  * @author Richard Davey / Photon Storm
  */
-class FlxBar extends FlxSprite
+class FlxBar extends FlxBaseSprite<FlxBarView>
 {
 	/**
 	 * If false, the bar is tracking its parent

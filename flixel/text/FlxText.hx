@@ -120,6 +120,10 @@ class FlxText extends FlxBaseSprite<FlxTextBuffer>
 	 */
 	public var autoSize(get, set):Bool;
 	
+	public var color(get, set):FlxColor;
+	
+	public var alpha(get, set):Float;
+	
 	/**
 	 * Creates a new FlxText object at the specified position.
 	 * 
@@ -236,6 +240,11 @@ class FlxText extends FlxBaseSprite<FlxTextBuffer>
 		graphic.setBorderStyle(Style, Color, Size, Quality);
 	}
 	
+	public function drawFrame(Force:Bool = false):Void
+	{
+		graphic.drawFrame(Force);
+	}
+	
 	private function set_fieldWidth(value:Float):Float
 	{
 		return graphic.fieldWidth = value;
@@ -274,11 +283,6 @@ class FlxText extends FlxBaseSprite<FlxTextBuffer>
 	private function set_size(Size:Int):Int
 	{
 		return graphic.size = Size;
-	}
-	
-	private function set_color(Color:FlxColor):Int
-	{
-		return graphic.color = Color;
 	}
 	
 	private function get_font():String
@@ -401,6 +405,26 @@ class FlxText extends FlxBaseSprite<FlxTextBuffer>
 	private function get_textField():TextField
 	{
 		return graphic.textField;
+	}
+	
+	private function get_color():FlxColor
+	{
+		return graphic.color;
+	}
+	
+	private function set_color(Value:FlxColor):FlxColor
+	{
+		return graphic.color = Value;
+	}
+	
+	private function get_alpha():Float
+	{
+		return graphic.alpha;
+	}
+	
+	private function set_alpha(Value:Float):Float
+	{
+		return graphic.alpha = Value;
 	}
 }
 

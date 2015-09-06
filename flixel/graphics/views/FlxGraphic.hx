@@ -50,7 +50,7 @@ class FlxGraphic implements IFlxDestroyable
 	 */
 	public var dirty:Bool = true;
 	
-	public var parent:FlxBaseSprite<Dynamic> = null;
+	public var parent(default, set):FlxBaseSprite<Dynamic> = null;
 	
 	/**
 	 * Link to current FlxFrame from loaded atlas
@@ -535,6 +535,11 @@ class FlxGraphic implements IFlxDestroyable
 	private function set_pixelPerfectRender(Value:Bool):Bool 
 	{
 		return pixelPerfectRender = Value;
+	}
+	
+	private function set_parent(Value:FlxBaseSprite<Dynamic>):FlxBaseSprite<Dynamic>
+	{
+		return parent = Value;
 	}
 	
 	/**

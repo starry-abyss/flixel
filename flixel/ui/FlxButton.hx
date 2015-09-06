@@ -213,12 +213,12 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 		scrollFactor.set();
 		
 		#if !FLX_NO_MOUSE
-			FlxG.stage.addEventListener(MouseEvent.MOUSE_UP, onUpEventListener);
+		FlxG.stage.addEventListener(MouseEvent.MOUSE_UP, onUpEventListener);
 		#end
 		
 		#if FLX_NO_MOUSE // no need for highlight frame without mouse input
-			statusAnimations[FlxButton.HIGHLIGHT] = "normal";
-			labelAlphas[FlxButton.HIGHLIGHT] = 1;
+		statusAnimations[FlxButton.HIGHLIGHT] = "normal";
+		labelAlphas[FlxButton.HIGHLIGHT] = 1;
 		#end
 		
 		input = new FlxInput(0);
@@ -264,7 +264,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 		input = null;
 		
 		#if !FLX_NO_MOUSE
-			FlxG.stage.removeEventListener(MouseEvent.MOUSE_UP, onUpEventListener);
+		FlxG.stage.removeEventListener(MouseEvent.MOUSE_UP, onUpEventListener);
 		#end
 		
 		super.destroy();
@@ -283,7 +283,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 		{
 			// Update the button, but only if at least either mouse or touches are enabled
 			#if FLX_POINTER_INPUT
-				updateButton();
+			updateButton();
 			#end
 			
 			// Trigger the animation only if the button's input status changes. 
@@ -323,9 +323,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 		super.drawDebug();
 		
 		if (label != null) 
-		{
 			label.drawDebug();
-		}
 	}
 #end
 
@@ -356,9 +354,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 			result = result && (labelNode != null);
 			
 			if (labelNode != null)
-			{
 				label.frames = labelNode.getImageFrame();
-			}
 		}
 		
 		return result;
@@ -400,10 +396,10 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 		}
 		
 		#if !FLX_NO_TOUCH // there's only a mouse event listener for onUp
-			if (currentInput != null && currentInput.justReleased && Std.is(currentInput, FlxTouch) && overlapFound)
-			{
-				onUpHandler();
-			}
+		if (currentInput != null && currentInput.justReleased && Std.is(currentInput, FlxTouch) && overlapFound)
+		{
+			onUpHandler();
+		}
 		#end
 		
 		if (status != FlxButton.NORMAL &&
@@ -466,9 +462,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 	private function updateLabelAlpha()
 	{
 		if (label != null && labelAlphas.length > status) 
-		{
 			label.alpha = alpha * labelAlphas[status];
-		}
 	}
 	
 	/**
@@ -479,9 +473,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 	private function onUpEventListener(_):Void
 	{
 		if (visible && exists && active && status == FlxButton.PRESSED)
-		{
 			onUpHandler();
-		}
 	}
 #end
 	
@@ -540,7 +532,6 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 		
 		label = Value;
 		updateLabelPosition();
-		
 		return Value;
 	}
 	
@@ -619,7 +610,7 @@ private class FlxButtonEvent implements IFlxDestroyable
 		callback = Callback;
 		
 		#if !FLX_NO_SOUND_SYSTEM
-			this.sound = sound;
+		this.sound = sound;
 		#end
 	}
 	
@@ -631,7 +622,7 @@ private class FlxButtonEvent implements IFlxDestroyable
 		callback = null;
 		
 		#if !FLX_NO_SOUND_SYSTEM
-			sound = FlxDestroyUtil.destroy(sound);
+		sound = FlxDestroyUtil.destroy(sound);
 		#end
 	}
 	
@@ -641,15 +632,11 @@ private class FlxButtonEvent implements IFlxDestroyable
 	public inline function fire():Void
 	{
 		if (callback != null) 
-		{
 			callback();
-		}
 		
 		#if !FLX_NO_SOUND_SYSTEM
-			if (sound != null) 
-			{
-				sound.play(true);
-			}
+		if (sound != null) 
+			sound.play(true);
 		#end
 	}
 }
