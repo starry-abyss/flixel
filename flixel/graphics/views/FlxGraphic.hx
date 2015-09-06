@@ -107,6 +107,8 @@ class FlxGraphic implements IFlxDestroyable
 	 */
 	public var pixelPerfectRender(default, set):Null<Bool>;
 	
+	public var graphicLoadedCallback:Void->Void;
+	
 	/**
 	 * Internal, reused frequently during drawing and animating.
 	 */
@@ -278,7 +280,11 @@ class FlxGraphic implements IFlxDestroyable
 	 * Called whenever a new graphic is loaded for this sprite
 	 * - after loadGraphic(), makeGraphic() etc.
 	 */
-	public function graphicLoaded():Void {  }
+	public function graphicLoaded():Void 
+	{ 
+		if (graphicLoadedCallback != null)
+			graphicLoadedCallback();
+	}
 	
 	/**
 	 * Helps to clean the memory from this graphic object
@@ -286,6 +292,7 @@ class FlxGraphic implements IFlxDestroyable
 	public function destroy():Void
 	{ 
 		_cameras = null;
+		graphicLoadedCallback = null;
 		
 		offset = FlxDestroyUtil.put(offset);
 		scrollFactor = FlxDestroyUtil.put(scrollFactor);

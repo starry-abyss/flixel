@@ -942,16 +942,6 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	}
 	
 	/**
-	 * Internal function to update the current animation frame.
-	 * 
-	 * @param	RunOnCpp	Whether the frame should also be recalculated if we're on a non-flash target
-	 */
-	override private inline function calcFrame(RunOnCpp:Bool = false):Void
-	{
-		// Nothing to do here
-	}
-	
-	/**
 	 * This functionality isn't supported in SpriteGroup
 	 */
 	override private inline function resetHelpers():Void {}
@@ -959,7 +949,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	/**
 	 * This functionality isn't supported in SpriteGroup
 	 */
-	override public inline function stamp(Brush:FlxSprite, X:Int = 0, Y:Int = 0):Void {}
+	override public function stamp(Brush:FlxSprite, X:Int = 0, Y:Int = 0):Void {}
 	
 	/**
 	 * This functionality isn't supported in SpriteGroup

@@ -1,6 +1,5 @@
 package flixel;
 
-import cpp.Void;
 import flash.display.BitmapData;
 import flash.display.BlendMode;
 import flash.geom.ColorTransform;
@@ -69,7 +68,7 @@ class FlxSprite extends FlxBaseSprite<FlxAnimated>
 	 * Set this flag to true to force the sprite to update during the draw() call.
 	 * NOTE: Rarely if ever necessary, most sprite operations will flip this flag automatically.
 	 */
-	public var dirty(get, set):Bool = true;
+	public var dirty(get, set):Bool;
 	
 	private function get_dirty():Bool
 	{
@@ -180,7 +179,7 @@ class FlxSprite extends FlxBaseSprite<FlxAnimated>
 	 */
 	public function new(?X:Float = 0, ?Y:Float = 0, ?SimpleGraphic:FlxGraphicAsset)
 	{
-		super(X, Y, SimpleGraphic);
+		super(X, Y, new FlxAnimated(this, SimpleGraphic));
 	}
 	
 	public function clone():FlxSprite
@@ -296,16 +295,16 @@ class FlxSprite extends FlxBaseSprite<FlxAnimated>
 	 * Called whenever a new graphic is loaded for this sprite
 	 * - after loadGraphic(), makeGraphic() etc.
 	 */
-	public var graphicLoaded(get, set):Void->Void;
+	public var graphicLoadedCallback(get, set):Void->Void;
 	
-	private function get_graphicLoaded():Void->Void
+	private function get_graphicLoadedCallback():Void->Void
 	{
-		return graphic.graphicLoaded;
+		return graphic.graphicLoadedCallback;
 	}
 	
-	private function set_graphicLoaded(Value:Void->Void):Void->Void
+	private function set_graphicLoadedCallback(Value:Void->Void):Void->Void
 	{
-		return graphic.graphicLoaded = Value;
+		return graphic.graphicLoadedCallback = Value;
 	}
 	
 	/**
@@ -392,7 +391,8 @@ class FlxSprite extends FlxBaseSprite<FlxAnimated>
 	 */
 	public function stamp(Brush:FlxSprite, X:Int = 0, Y:Int = 0):Void
 	{
-		graphic.stamp(Brush, X, Y);
+		if (Brush.graphic != null)
+			graphic.stamp(Brush.graphic, X, Y);
 	}
 	
 	/**

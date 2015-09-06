@@ -4,6 +4,7 @@ import flixel.animation.FlxAnimationController;
 import flixel.graphics.frames.FlxFramesCollection;
 import flixel.math.FlxRect;
 import flixel.system.FlxAssets.FlxGraphicAsset;
+import flixel.util.FlxDestroyUtil;
 
 /**
  * ...
@@ -54,7 +55,7 @@ class FlxAnimated extends FlxImage
 	 * @param	saveAnimations		Whether to save animations in animation controller or not
 	 * @return	This sprite with loaded frames
 	 */
-	public function setFrames(Frames:FlxFramesCollection, saveAnimations:Bool = true):FlxSprite
+	public function setFrames(Frames:FlxFramesCollection, saveAnimations:Bool = true):FlxAnimated
 	{
 		if (saveAnimations)
 		{
@@ -106,7 +107,7 @@ class FlxAnimated extends FlxImage
 		return rect;
 	}
 	
-	private function set_frames(Frames:FlxFramesCollection):FlxFramesCollection
+	override private function set_frames(Frames:FlxFramesCollection):FlxFramesCollection
 	{
 		if (animation != null)
 			animation.destroyAnimations();
@@ -118,5 +119,4 @@ class FlxAnimated extends FlxImage
 		
 		return Frames;
 	}
-	
 }
