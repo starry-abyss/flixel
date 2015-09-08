@@ -12,6 +12,12 @@ class FlxBaseSprite<T:FlxGraphic> extends FlxObject
 {
 	public var graphic(default, set):T;
 	
+	/**
+	 * Controls how much this object is affected by camera scrolling. 0 = no movement (e.g. a background layer), 
+	 * 1 = same movement speed as the foreground. Default value is (1,1), except for UI elements like FlxButton where it's (0,0).
+	 */
+	public var scrollFactor(get, null):FlxPoint;
+	
 	public function new(?X:Float = 0, ?Y:Float = 0, ?Graphic:T) 
 	{
 		super(X, Y);
@@ -58,8 +64,11 @@ class FlxBaseSprite<T:FlxGraphic> extends FlxObject
 		return graphic;
 	}
 	
-	override function get_scrollFactor():FlxPoint 
+	private function get_scrollFactor():FlxPoint 
 	{
-		return graphic.scrollFactor;
+		if (graphic != null)
+			return graphic.scrollFactor;
+			
+		return null;
 	}
 }
