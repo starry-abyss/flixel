@@ -435,9 +435,7 @@ class FlxBarView extends FlxImage
 			_emptyBarRect.setTo(0, 0, barWidth, barHeight);
 			
 			if (texture == null || (frame.sourceSize.x != barWidth || frame.sourceSize.y != barHeight))
-			{
 				makeGraphic(barWidth, barHeight, FlxColor.TRANSPARENT, true);
-			}
 			
 			updateEmptyBar();
 			#end
@@ -467,13 +465,10 @@ class FlxBarView extends FlxImage
 			frontFrames = filledGraphic.imageFrame;
 			#else
 			_filledBar = filledGraphic.bitmap.clone();
-			
 			_filledBarRect.setTo(0, 0, barWidth, barHeight);
 			
 			if (texture == null || (frame.sourceSize.x != barWidth || frame.sourceSize.y != barHeight))
-			{
 				makeGraphic(barWidth, barHeight, FlxColor.TRANSPARENT, true);
-			}
 			
 			pxPerPercent = (_fillHorizontal) ? (barWidth / 100) : (barHeight / 100);
 			updateFilledBar();

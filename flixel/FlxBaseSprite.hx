@@ -50,6 +50,18 @@ class FlxBaseSprite<T:FlxGraphic> extends FlxObject
 			graphic.update(elapsed);
 	}
 	
+	public function setTop(Y:Float):Float
+	{
+		// TODO: implement these methods after changes in origin handling...
+		return y = Y;
+	}
+	
+	public function setLeft(X:Float):Float
+	{
+		// TODO: implement these methods after changes in origin handling...
+		return x = X;
+	}
+	
 	private function set_graphic(Value:T):T
 	{
 		graphic = Value;

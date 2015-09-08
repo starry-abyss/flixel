@@ -173,9 +173,7 @@ class FlxBar extends FlxBaseSprite<FlxBarView>
 		parentVariable = variable;
 		
 		if (track)
-		{
 			trackParent(offsetX, offsetY);
-		}
 		
 		updateValueFromParent();
 	}
@@ -434,15 +432,11 @@ class FlxBar extends FlxBaseSprite<FlxBarView>
 	{
 		#if neko
 		if (value == null) 
-		{
 			value = min;
-		}
 		#end
 
 		if (value > max)
-		{
 			return 100;
-		}
 		
 		return Math.floor((value / range) * 100);
 	}
@@ -450,9 +444,8 @@ class FlxBar extends FlxBaseSprite<FlxBarView>
 	private function set_percent(newPct:Float):Float
 	{
 		if (newPct >= 0 && newPct <= 100)
-		{
 			value = pct * newPct;
-		}
+		
 		return newPct;
 	}
 	
@@ -461,19 +454,13 @@ class FlxBar extends FlxBaseSprite<FlxBarView>
 		value = Math.max(min, Math.min(newValue, max));
 		
 		if (value == min && emptyCallback != null)
-		{
 			emptyCallback();
-		}
 		
 		if (value == max && filledCallback != null)
-		{
 			filledCallback();
-		}
 		
 		if (value == min && killOnEmpty)
-		{
 			kill();
-		}
 		
 		updateBar();
 		return newValue;
