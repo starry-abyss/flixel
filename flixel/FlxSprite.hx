@@ -656,7 +656,7 @@ interface IFlxSprite extends IFlxBasic
 	public var maxVelocity(default, null):FlxPoint;
 	public var acceleration(default, null):FlxPoint;
 	public var drag(default, null):FlxPoint;
-	public var scrollFactor(default, null):FlxPoint;
+	public var scrollFactor(get, null):FlxPoint;
 
 	public function reset(X:Float, Y:Float):Void;
 	public function setPosition(X:Float = 0, Y:Float = 0):Void;

@@ -448,7 +448,7 @@ class FlxObject extends FlxBasic
 	 * Controls how much this object is affected by camera scrolling. 0 = no movement (e.g. a background layer), 
 	 * 1 = same movement speed as the foreground. Default value is (1,1), except for UI elements like FlxButton where it's (0,0).
 	 */
-	public var scrollFactor(default, null):FlxPoint;
+	public var scrollFactor(get, null):FlxPoint;
 	/**
 	 * The basic speed of this object (in pixels per second).
 	 */
@@ -563,7 +563,6 @@ class FlxObject extends FlxBasic
 	{
 		flixelType = OBJECT;
 		last = FlxPoint.get(x, y);
-		scrollFactor = FlxPoint.get(1, 1);
 		pixelPerfectPosition = FlxObject.defaultPixelPerfectPosition;
 		
 		initMotionVars();
@@ -592,7 +591,6 @@ class FlxObject extends FlxBasic
 		acceleration = FlxDestroyUtil.put(acceleration);
 		drag = FlxDestroyUtil.put(drag);
 		maxVelocity = FlxDestroyUtil.put(maxVelocity);
-		scrollFactor = FlxDestroyUtil.put(scrollFactor);
 		last = FlxDestroyUtil.put(last);
 		_point = FlxDestroyUtil.put(_point);
 		_rect = FlxDestroyUtil.put(_rect);
@@ -1159,5 +1157,10 @@ class FlxObject extends FlxBasic
 	private function set_allowCollisions(Value:Int):Int 
 	{
 		return allowCollisions = Value;
+	}
+	
+	private function get_scrollFactor():FlxPoint
+	{
+		return null;
 	}
 }

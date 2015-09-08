@@ -1,5 +1,6 @@
 package flixel;
 import flixel.graphics.views.FlxGraphic;
+import flixel.math.FlxPoint;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.util.FlxDestroyUtil;
 
@@ -55,5 +56,10 @@ class FlxBaseSprite<T:FlxGraphic> extends FlxObject
 		}
 		
 		return graphic;
+	}
+	
+	override function get_scrollFactor():FlxPoint 
+	{
+		return graphic.scrollFactor;
 	}
 }

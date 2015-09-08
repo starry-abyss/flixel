@@ -944,11 +944,6 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	/**
 	 * This functionality isn't supported in SpriteGroup
 	 */
-	override private inline function resetHelpers():Void {}
-	
-	/**
-	 * This functionality isn't supported in SpriteGroup
-	 */
 	override public function stamp(Brush:FlxSprite, X:Int = 0, Y:Int = 0):Void {}
 	
 	/**
@@ -958,9 +953,4 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	{
 		return Frames;
 	}
-	
-	/**
-	 * This functionality isn't supported in SpriteGroup
-	 */
-	override private inline function updateColorTransform():Void {}
 }
