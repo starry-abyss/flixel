@@ -13,6 +13,7 @@ import flixel.util.FlxDestroyUtil;
 import openfl.display.BitmapData;
 import openfl.display.BlendMode;
 import openfl.geom.ColorTransform;
+import openfl.geom.Matrix;
 
 /**
  * ...
@@ -84,6 +85,18 @@ class FlxImage extends FlxGraphic
 	public var clipRect(default, set):FlxRect;
 	
 	/**
+	 * Tranformation matrix for this sprite.
+	 * Used only when matrixExposed is set to true
+	 */
+	public var transformMatrix(default, null):Matrix;
+	
+	/**
+	 * Bool flag showing whether transformMatrix is used for rendering or not.
+	 * False by default, which means that transformMatrix isn't used for rendering
+	 */
+	public var matrixExposed:Bool = false;
+	
+	/**
 	 * The actual frame used for sprite rendering
 	 */
 	private var _frame:FlxFrame;
@@ -121,6 +134,7 @@ class FlxImage extends FlxGraphic
 		origin = FlxPoint.get();
 		scale = FlxPoint.get(1, 1);
 		_halfSize = FlxPoint.get();
+		transformMatrix = new Matrix();
 		colorTransform = new ColorTransform();
 	}
 	
@@ -134,6 +148,7 @@ class FlxImage extends FlxGraphic
 		
 		colorTransform = null;
 		blend = null;
+		transformMatrix = null;
 		_frame = FlxDestroyUtil.destroy(_frame);
 	}
 	
@@ -233,6 +248,9 @@ class FlxImage extends FlxGraphic
 				updateTrig();					
 				if (angle != 0)
 					_matrix.rotateWithTrig(_cosAngle, _sinAngle);
+				
+				if (matrixExposed)
+					_matrix.concat(transformMatrix);
 				
 				_point.add(origin.x, origin.y);
 				if (isPixelPerfectRender(camera))
@@ -554,7 +572,7 @@ class FlxImage extends FlxGraphic
 	
 	override public function isSimpleRenderBlit(?camera:FlxCamera):Bool
 	{
-		var result:Bool = angle == 0 && scale.x == 1 && scale.y == 1 && blend == null;
+		var result:Bool = angle == 0 && scale.x == 1 && scale.y == 1 && blend == null && matrixExposed == false;
 		result = result && (camera != null ? isPixelPerfectRender(camera) : pixelPerfectRender);
 		return result;
 	}

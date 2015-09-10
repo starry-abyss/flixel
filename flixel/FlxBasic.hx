@@ -13,9 +13,9 @@ class FlxBasic implements IFlxDestroyable
 	/**
 	 * Static counters for performance tracking.
 	 */
-	@:allow(flixel.FlxGame)
+	@:allow(flixel)
 	private static var activeCount:Int = 0;
-	@:allow(flixel.FlxGame)
+	@:allow(flixel)
 	private static var visibleCount:Int = 0;
 	#end
 	
