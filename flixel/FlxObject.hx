@@ -651,6 +651,48 @@ class FlxObject extends FlxBasic
 	}
 	
 	/**
+	 * Call this function to figure out the on-screen position of the object.
+	 * 
+	 * @param	Camera		Specify which game camera you want.  If null getScreenPosition() will just grab the first global camera.
+	 * @param	Point		Takes a FlxPoint object and assigns the post-scrolled X and Y values of this object to it.
+	 * @return	The Point you passed in, or a new Point if you didn't pass one, containing the screen X and Y position of this object.
+	 */
+	public function getScreenPosition(?point:FlxPoint, ?Camera:FlxCamera):FlxPoint
+	{
+		if (point == null)
+		{
+			point = FlxPoint.get();
+		}
+		if (Camera == null)
+		{
+			Camera = FlxG.camera;
+		}
+		
+		point.set(x, y);
+		if (pixelPerfectPosition)
+		{
+			point.floor();
+		}
+		
+		return point.subtract(Camera.scroll.x, Camera.scroll.y);
+	}
+	
+	/**
+	 * Check and see if this object is currently on screen.
+	 * 
+	 * @param	Camera		Specify which game camera you want.  If null getScreenPosition() will just grab the first global camera.
+	 * @return	Whether the object is on screen or not.
+	 */
+	public function isOnScreen(?Camera:FlxCamera):Bool
+	{
+		if (Camera == null)
+			Camera = FlxG.camera;
+		
+		getScreenPosition(_point, Camera);
+		return (_point.x + width > 0) && (_point.x < Camera.width) && (_point.y + height > 0) && (_point.y < Camera.height);
+	}
+	
+	/**
 	 * Checks to see if some FlxObject overlaps this FlxObject or FlxGroup. If the group has a LOT of things in it, 
 	 * it might be faster to use FlxG.overlaps(). WARNING: Currently tilemaps do NOT support screen space overlap checks!
 	 * 

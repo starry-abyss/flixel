@@ -41,6 +41,12 @@ class FlxBaseSprite extends FlxObject
 	public var frames(get, set):FlxFramesCollection;
 	
 	/**
+	 * Set this flag to true to force the sprite to update during the draw() call.
+	 * NOTE: Rarely if ever necessary, most sprite operations will flip this flag automatically.
+	 */
+	public var dirty(get, set):Bool;
+	
+	/**
 	 * Called whenever a new graphic is loaded for this sprite
 	 * - after loadGraphic(), makeGraphic() etc.
 	 */
@@ -85,15 +91,12 @@ class FlxBaseSprite extends FlxObject
 	 * @param	Point		Takes a FlxPoint object and assigns the post-scrolled X and Y values of this object to it.
 	 * @return	The Point you passed in, or a new Point if you didn't pass one, containing the screen X and Y position of this object.
 	 */
-	public function getScreenPosition(?point:FlxPoint, ?Camera:FlxCamera):FlxPoint
+	override public function getScreenPosition(?point:FlxPoint, ?Camera:FlxCamera):FlxPoint
 	{
 		if (graphic != null)
 			return graphic.getScreenPosition(point, Camera);
 		
-		if (point == null)
-			point = FlxPoint.get();
-		
-		return point.set(x, y);
+		return super.getScreenPosition(point, Camera);
 	}
 	
 	private function resetHelpers():Void
@@ -108,12 +111,12 @@ class FlxBaseSprite extends FlxObject
 	 * @param	Camera		Specify which game camera you want.  If null getScreenPosition() will just grab the first global camera.
 	 * @return	Whether the object is on screen or not.
 	 */
-	public function isOnScreen(?Camera:FlxCamera):Bool
+	override public function isOnScreen(?Camera:FlxCamera):Bool
 	{
 		if (graphic != null)
 			return graphic.isOnScreen(Camera);
 		
-		return false;
+		return super.isOnScreen(Camera);
 	}
 	
 	/**
@@ -278,5 +281,15 @@ class FlxBaseSprite extends FlxObject
 	private function set_graphicLoadedCallback(Value:Void->Void):Void->Void
 	{
 		return graphic.graphicLoadedCallback = Value;
+	}
+	
+	private function get_dirty():Bool
+	{
+		return graphic.dirty;
+	}
+	
+	private function set_dirty(Value:Bool):Bool
+	{
+		return graphic.dirty = Value;
 	}
 }

@@ -65,22 +65,6 @@ class FlxSprite extends FlxBaseSprite
 	}
 	
 	/**
-	 * Set this flag to true to force the sprite to update during the draw() call.
-	 * NOTE: Rarely if ever necessary, most sprite operations will flip this flag automatically.
-	 */
-	public var dirty(get, set):Bool;
-	
-	private function get_dirty():Bool
-	{
-		return graphic.dirty;
-	}
-	
-	private function set_dirty(Value:Bool):Bool
-	{
-		return graphic.dirty = Value;
-	}
-	
-	/**
 	 * Set pixels to any BitmapData object.
 	 * Automatically adjust graphic size and render helpers.
 	 */

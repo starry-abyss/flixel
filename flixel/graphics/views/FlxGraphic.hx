@@ -28,7 +28,7 @@ class FlxGraphic implements IFlxDestroyable
 	 * If the graphic should update.
 	 */
 	public var active:Bool;
-
+	
 	/**
 	 * If the graphic should render.
 	 */
@@ -358,9 +358,8 @@ class FlxGraphic implements IFlxDestroyable
 		if (parent == null)	return false;
 		
 		if (Camera == null)
-		{
 			Camera = FlxG.camera;
-		}
+		
 		getScreenPosition(_point, Camera);
 		return (_point.x + frameWidth > 0) && (_point.x < Camera.width) && (_point.y + frameHeight > 0) && (_point.y < Camera.height);
 	}

@@ -1,5 +1,6 @@
 package flixel.tile;
 
+import flixel.FlxBaseSprite;
 import flixel.FlxObject;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxPoint;
@@ -8,7 +9,7 @@ import flixel.system.FlxAssets.FlxTilemapGraphicAsset;
 import flixel.util.FlxArrayUtil;
 import openfl.Assets;
 
-class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
+class FlxBaseTilemap<Tile:FlxObject> extends FlxBaseSprite
 {
 	/**
 	 * Set this flag to use one of the 16-tile binary auto-tile algorithms (OFF, AUTO, or ALT).
