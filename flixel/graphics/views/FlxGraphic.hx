@@ -9,6 +9,7 @@ import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.system.FlxAssets.FlxGraphicAsset;
+import flixel.util.FlxBitmapDataUtil;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import openfl.geom.Point;
@@ -50,7 +51,7 @@ class FlxGraphic implements IFlxDestroyable
 	 */
 	public var dirty:Bool = true;
 	
-	public var parent(default, set):FlxBaseSprite<Dynamic> = null;
+	public var parent(default, set):FlxBaseSprite = null;
 	
 	/**
 	 * Link to current FlxFrame from loaded atlas
@@ -59,11 +60,11 @@ class FlxGraphic implements IFlxDestroyable
 	/**
 	 * The width of the actual graphic or image being displayed (not necessarily the game object/bounding box).
 	 */
-	public var frameWidth(default, null):Int = 0;
+	public var frameWidth:Int = 0;
 	/**
 	 * The height of the actual graphic or image being displayed (not necessarily the game object/bounding box).
 	 */
-	public var frameHeight(default, null):Int = 0;
+	public var frameHeight:Int = 0;
 	/**
 	 * The total number of frames in this image.  WARNING: assumes each row in the sprite sheet is full!
 	 */
@@ -135,7 +136,7 @@ class FlxGraphic implements IFlxDestroyable
 	
 	private var _point:FlxPoint;
 	
-	public function new(?Parent:FlxBaseSprite<Dynamic>, ?Graphic:FlxGraphicAsset)
+	public function new(?Parent:FlxBaseSprite, ?Graphic:FlxGraphicAsset)
 	{
 		parent = Parent;
 		initVars();
@@ -393,6 +394,38 @@ class FlxGraphic implements IFlxDestroyable
 		return point.subtract(Camera.scroll.x * scrollFactor.x, Camera.scroll.y * scrollFactor.y);
 	}
 	
+	/**
+	 * Replaces all pixels with specified Color with NewColor pixels. 
+	 * WARNING: very expensive (especially on big graphics) as it iterates over every single pixel.
+	 * 
+	 * @param	Color				Color to replace
+	 * @param	NewColor			New color
+	 * @param	FetchPositions		Whether we need to store positions of pixels which colors were replaced
+	 * @return	Array replaced pixels positions
+	 */
+	public function replaceColor(Color:FlxColor, NewColor:FlxColor, FetchPositions:Bool = false):Array<FlxPoint>
+	{
+		var positions:Array<FlxPoint> = FlxBitmapDataUtil.replaceColor(texture.bitmap, Color, NewColor, FetchPositions);
+		if (positions != null)
+		{
+			dirty = true;
+		}
+		return positions;
+	}
+	
+	/**
+	 * Updates the sprite's hitbox (width, height, offset) according to the current scale. 
+	 * Also calls setOriginToCenter(). Called by setGraphicSize().
+	 */
+	public function updateHitbox():Void
+	{
+		if (parent == null)
+			return;
+		
+		parent.width = frameWidth;
+		parent.height = frameHeight;
+	}
+	
 	private function get_pixels():BitmapData
 	{
 		if (texture == null)
@@ -537,7 +570,7 @@ class FlxGraphic implements IFlxDestroyable
 		return pixelPerfectRender = Value;
 	}
 	
-	private function set_parent(Value:FlxBaseSprite<Dynamic>):FlxBaseSprite<Dynamic>
+	private function set_parent(Value:FlxBaseSprite):FlxBaseSprite
 	{
 		return parent = Value;
 	}
@@ -545,6 +578,7 @@ class FlxGraphic implements IFlxDestroyable
 	/**
 	 * Resets some important variables for sprite optimization and rendering.
 	 */
+	@:allow(flixel)
 	private function resetHelpers():Void
 	{
 		resetFrameSize();

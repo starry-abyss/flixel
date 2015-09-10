@@ -34,7 +34,7 @@ import flixel.util.FlxStringUtil;
  * @link http://www.photonstorm.com
  * @author Richard Davey / Photon Storm
  */
-class FlxBar extends FlxBaseSprite<FlxBarView>
+class FlxBar extends FlxBaseSprite
 {
 	/**
 	 * If false, the bar is tracking its parent
@@ -96,6 +96,8 @@ class FlxBar extends FlxBaseSprite<FlxBarView>
 	 */
 	public var fillDirection(get, set):FlxBarFillDirection;	
 	
+	private var _barGraphic:FlxBarView;
+	
 	/**
 	 * Create a new FlxBar Object
 	 * 
@@ -114,7 +116,7 @@ class FlxBar extends FlxBaseSprite<FlxBarView>
 	{
 		super(x, y);
 		
-		graphic = new FlxBarView(this, direction, width, height, showBorder);
+		graphic = _barGraphic = new FlxBarView(this, direction, width, height, showBorder);
 		
 		if (parentRef != null)
 		{
@@ -133,6 +135,7 @@ class FlxBar extends FlxBaseSprite<FlxBarView>
 		positionOffset = null;
 		emptyCallback = null;
 		filledCallback = null;
+		_barGraphic = null;
 		
 		super.destroy();
 	}
@@ -226,7 +229,7 @@ class FlxBar extends FlxBaseSprite<FlxBarView>
 		this.range = max - min;
 		this.pct = range / 100;
 		
-		graphic.fillDirection = fillDirection;
+		_barGraphic.fillDirection = fillDirection;
 		
 		if (!Math.isNaN(value))
 		{
@@ -250,7 +253,7 @@ class FlxBar extends FlxBaseSprite<FlxBarView>
 	 */
 	public function createFilledBar(empty:Int, fill:Int, showBorder:Bool = false, border:Int = 0xffffffff):FlxBar
 	{
-		graphic.createFilledBar(empty, fill, showBorder);
+		_barGraphic.createFilledBar(empty, fill, showBorder);
 		return this;
 	}
 	
@@ -264,7 +267,7 @@ class FlxBar extends FlxBaseSprite<FlxBarView>
 	 */
 	public function createColoredEmptyBar(empty:Int, showBorder:Bool = false, border:Int = 0xffffffff):FlxBar
 	{
-		graphic.createColoredEmptyBar(empty, showBorder, border);
+		_barGraphic.createColoredEmptyBar(empty, showBorder, border);
 		return this;
 	}
 	
@@ -295,7 +298,7 @@ class FlxBar extends FlxBaseSprite<FlxBarView>
 	 */
 	public function createGradientBar(empty:Array<Int>, fill:Array<Int>, chunkSize:Int = 1, rotation:Int = 180, showBorder:Bool = false, border:Int = 0xffffffff):FlxBar
 	{
-		graphic.createGradientBar(empty, fill, chunkSize, rotation, showBorder, border);
+		_barGraphic.createGradientBar(empty, fill, chunkSize, rotation, showBorder, border);
 		return this;
 	}
 	
@@ -311,7 +314,7 @@ class FlxBar extends FlxBaseSprite<FlxBarView>
 	 */
 	public function createGradientEmptyBar(empty:Array<Int>, chunkSize:Int = 1, rotation:Int = 180, showBorder:Bool = false, border:Int = 0xffffffff):FlxBar
 	{
-		graphic.createGradientEmptyBar(empty, chunkSize, rotation, showBorder, border);
+		_barGraphic.createGradientEmptyBar(empty, chunkSize, rotation, showBorder, border);
 		return this;
 	}
 	
@@ -327,7 +330,7 @@ class FlxBar extends FlxBaseSprite<FlxBarView>
 	 */
 	public function createGradientFilledBar(fill:Array<Int>, chunkSize:Int = 1, rotation:Int = 180, showBorder:Bool = false, border:Int = 0xffffffff):FlxBar
 	{
-		graphic.createGradientFilledBar(fill, chunkSize, rotation, showBorder, border);
+		_barGraphic.createGradientFilledBar(fill, chunkSize, rotation, showBorder, border);
 		return this;
 	}
 	
@@ -345,7 +348,7 @@ class FlxBar extends FlxBaseSprite<FlxBarView>
 	 */
 	public function createImageBar(?empty:FlxGraphicAsset, ?fill:FlxGraphicAsset, emptyBackground:Int = 0xff000000, fillBackground:Int = 0xff00ff00):FlxBar
 	{
-		graphic.createImageBar(empty, fill, emptyBackground, fillBackground);
+		_barGraphic.createImageBar(empty, fill, emptyBackground, fillBackground);
 		return this;
 	}
 	
@@ -358,7 +361,7 @@ class FlxBar extends FlxBaseSprite<FlxBarView>
 	 */
 	public function createImageEmptyBar(?empty:FlxGraphicAsset, emptyBackground:Int = 0xff000000):FlxBar
 	{
-		graphic.createImageEmptyBar(empty, emptyBackground);
+		_barGraphic.createImageEmptyBar(empty, emptyBackground);
 		return this;
 	}
 	
@@ -371,18 +374,18 @@ class FlxBar extends FlxBaseSprite<FlxBarView>
 	 */
 	public function createImageFilledBar(?fill:FlxGraphicAsset, fillBackground:Int = 0xff00ff00):FlxBar
 	{
-		graphic.createImageFilledBar(fill, fillBackground);
+		_barGraphic.createImageFilledBar(fill, fillBackground);
 		return this;
 	}
 	
 	private function get_fillDirection():FlxBarFillDirection
 	{
-		return graphic.fillDirection;
+		return _barGraphic.fillDirection;
 	}
 	
 	private function set_fillDirection(direction:FlxBarFillDirection):FlxBarFillDirection
 	{
-		return graphic.fillDirection = direction;
+		return _barGraphic.fillDirection = direction;
 	}
 	
 	private function updateValueFromParent():Void
@@ -396,7 +399,7 @@ class FlxBar extends FlxBaseSprite<FlxBarView>
 	 */
 	public inline function updateBar():Void
 	{
-		graphic.updateBar();
+		_barGraphic.updateBar();
 	}
 	
 	override public function update(elapsed:Float):Void

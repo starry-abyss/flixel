@@ -39,13 +39,13 @@ private class GraphicDefault extends BitmapData {}
  * or create a base monochromatic rectangle using makeGraphic().
  * The image BitmapData is stored in the pixels field.
  */
-class FlxSprite extends FlxBaseSprite<FlxAnimated>
+class FlxSprite extends FlxBaseSprite
 {
 	public var animation(get, null):FlxAnimationController;
 	
 	private function get_animation():FlxAnimationController
 	{
-		return graphic.animation;
+		return spriteGraphic.animation;
 	}
 	
 	/**
@@ -56,12 +56,12 @@ class FlxSprite extends FlxBaseSprite<FlxAnimated>
 	
 	private function get_framePixels():BitmapData
 	{
-		return graphic.framePixels;
+		return spriteGraphic.framePixels;
 	}
 	
 	private function set_framePixels(Value:BitmapData):BitmapData
 	{
-		return graphic.framePixels = Value;
+		return spriteGraphic.framePixels = Value;
 	}
 	
 	/**
@@ -89,28 +89,7 @@ class FlxSprite extends FlxBaseSprite<FlxAnimated>
 	 * Link to current FlxFrame from loaded atlas
 	 */
 	public var frame(default, set):FlxFrame;
-	/**
-	 * The width of the actual graphic or image being displayed (not necessarily the game object/bounding box).
-	 */
-	public var frameWidth(default, null):Int = 0;
-	/**
-	 * The height of the actual graphic or image being displayed (not necessarily the game object/bounding box).
-	 */
-	public var frameHeight(default, null):Int = 0;
-	/**
-	 * The total number of frames in this image.  WARNING: assumes each row in the sprite sheet is full!
-	 */
-	public var numFrames(default, null):Int = 0;
-	/**
-	 * Rendering variables.
-	 */
-	public var frames(default, set):FlxFramesCollection;
-	public var texture(default, set):FlxTexture;
-	/**
-	 * The minimum angle (out of 360°) for which a new baked rotation exists. Example: 90 means there 
-	 * are 4 baked rotations in the spritesheet. 0 if this sprite does not have any baked rotations.
-	 */
-	public var bakedRotationAngle(default, null):Float = 0;
+	
 	/**
 	 * Set alpha to a number between 0 and 1 to change the opacity of the sprite.
 	 */
@@ -169,6 +148,8 @@ class FlxSprite extends FlxBaseSprite<FlxAnimated>
 	 */
 	public var clipRect(get, set):FlxRect;
 	
+	public var spriteGraphic(default, null):FlxAnimated;
+	
 	/**
 	 * Creates a FlxSprite at a specified position with a specified one-frame graphic. 
 	 * If none is provided, a 16x16 image of the HaxeFlixel logo is used.
@@ -179,7 +160,13 @@ class FlxSprite extends FlxBaseSprite<FlxAnimated>
 	 */
 	public function new(?X:Float = 0, ?Y:Float = 0, ?SimpleGraphic:FlxGraphicAsset)
 	{
-		super(X, Y, new FlxAnimated(this, SimpleGraphic));
+		super(X, Y, spriteGraphic = new FlxAnimated(this, SimpleGraphic));
+	}
+	
+	override public function destroy():Void 
+	{
+		super.destroy();
+		spriteGraphic = null;
 	}
 	
 	public function clone():FlxSprite
@@ -292,46 +279,6 @@ class FlxSprite extends FlxBaseSprite<FlxAnimated>
 	}
 	
 	/**
-	 * Called whenever a new graphic is loaded for this sprite
-	 * - after loadGraphic(), makeGraphic() etc.
-	 */
-	public var graphicLoadedCallback(get, set):Void->Void;
-	
-	private function get_graphicLoadedCallback():Void->Void
-	{
-		return graphic.graphicLoadedCallback;
-	}
-	
-	private function set_graphicLoadedCallback(Value:Void->Void):Void->Void
-	{
-		return graphic.graphicLoadedCallback = Value;
-	}
-	
-	/**
-	 * Resets _flashRect variable used for frame bitmapData calculation
-	 */
-	public inline function resetSize():Void
-	{
-		graphic.resetSize();
-	}
-	
-	/**
-	 * Resets frame size to frame dimensions
-	 */
-	public inline function resetFrameSize():Void
-	{
-		graphic.resetFrameSize();
-	}
-	
-	/**
-	 * Resets sprite's size back to frame size
-	 */
-	public inline function resetSizeFromFrame():Void
-	{
-		graphic.resetSizeFromFrame();
-	}
-	
-	/**
 	 * Helper function to set the graphic's dimensions by using scale, allowing you to keep the current aspect ratio
 	 * should one of the Integers be <= 0. It might make sense to call updateHitbox() afterwards!
 	 * 
@@ -340,16 +287,7 @@ class FlxSprite extends FlxBaseSprite<FlxAnimated>
 	 */
 	public function setGraphicSize(Width:Int = 0, Height:Int = 0):Void
 	{
-		graphic.setGraphicSize(Width, Height);
-	}
-	
-	/**
-	 * Updates the sprite's hitbox (width, height, offset) according to the current scale. 
-	 * Also calls setOriginToCenter(). Called by setGraphicSize().
-	 */
-	public function updateHitbox():Void
-	{
-		graphic.updateHitbox();
+		spriteGraphic.setGraphicSize(Width, Height);
 	}
 	
 	/**
@@ -392,7 +330,7 @@ class FlxSprite extends FlxBaseSprite<FlxAnimated>
 	public function stamp(Brush:FlxSprite, X:Int = 0, Y:Int = 0):Void
 	{
 		if (Brush.graphic != null)
-			graphic.stamp(Brush.graphic, X, Y);
+			spriteGraphic.stamp(Brush.spriteGraphic, X, Y);
 	}
 	
 	/**
@@ -403,7 +341,7 @@ class FlxSprite extends FlxBaseSprite<FlxAnimated>
 	 */
 	public function drawFrame(Force:Bool = false):Void
 	{
-		graphic.drawFrame(Force);
+		spriteGraphic.drawFrame(Force);
 	}
 	
 	/**
@@ -413,7 +351,7 @@ class FlxSprite extends FlxBaseSprite<FlxAnimated>
 	 */
 	public function centerOffsets(AdjustPosition:Bool = false):Void
 	{
-		graphic.centerOffsets(AdjustPosition);
+		spriteGraphic.centerOffsets(AdjustPosition);
 	}
 
 	/**
@@ -422,21 +360,7 @@ class FlxSprite extends FlxBaseSprite<FlxAnimated>
 	 */
 	public inline function centerOrigin():Void
 	{
-		graphic.centerOrigin();
-	}
-	
-	/**
-	 * Replaces all pixels with specified Color with NewColor pixels. 
-	 * WARNING: very expensive (especially on big graphics) as it iterates over every single pixel.
-	 * 
-	 * @param	Color				Color to replace
-	 * @param	NewColor			New color
-	 * @param	FetchPositions		Whether we need to store positions of pixels which colors were replaced
-	 * @return	Array replaced pixels positions
-	 */
-	public function replaceColor(Color:FlxColor, NewColor:FlxColor, FetchPositions:Bool = false):Array<FlxPoint>
-	{
-		return graphic.replaceColor(Color, NewColor, FetchPositions);
+		spriteGraphic.centerOrigin();
 	}
 	
 	/**
@@ -455,21 +379,7 @@ class FlxSprite extends FlxBaseSprite<FlxAnimated>
 	public function setColorTransform(redMultiplier:Float = 1.0, greenMultiplier:Float = 1.0, blueMultiplier:Float = 1.0,
 		alphaMultiplier:Float = 1.0, redOffset:Float = 0, greenOffset:Float = 0, blueOffset:Float = 0, alphaOffset:Float = 0):Void
 	{
-		graphic.setColorTransform(redMultiplier, greenMultiplier, blueMultiplier, alphaMultiplier, redOffset, greenOffset, blueOffset, alphaOffset);
-	}
-	
-	/**
-	 * Checks to see if a point in 2D world space overlaps this FlxSprite object's current displayed pixels.
-	 * This check is ALWAYS made in screen space, and always takes scroll factors into account.
-	 * 
-	 * @param	Point		The point in world space you want to check.
-	 * @param	Mask		Used in the pixel hit test to determine what counts as solid.
-	 * @param	Camera		Specify which game camera you want.  If null getScreenPosition() will just grab the first global camera.
-	 * @return	Whether or not the point overlaps this object.
-	 */
-	public function pixelsOverlapPoint(point:FlxPoint, Mask:Int = 0xFF, ?Camera:FlxCamera):Bool
-	{
-		return graphic.pixelsOverlapPoint(point, Mask, Camera);
+		spriteGraphic.setColorTransform(redMultiplier, greenMultiplier, blueMultiplier, alphaMultiplier, redOffset, greenOffset, blueOffset, alphaOffset);
 	}
 	
 	/**
@@ -477,30 +387,7 @@ class FlxSprite extends FlxBaseSprite<FlxAnimated>
 	 */
 	public function getFlxFrameBitmapData():BitmapData
 	{
-		return graphic.getFlxFrameBitmapData();
-	}
-	
-	/**
-	 * Retrieve the midpoint of this sprite's graphic in world coordinates.
-	 * 
-	 * @param	point	Allows you to pass in an existing FlxPoint object if you're so inclined. Otherwise a new one is created.
-	 * @return	A FlxPoint object containing the midpoint of this sprite's graphic in world coordinates.
-	 */
-	public function getGraphicMidpoint(?point:FlxPoint):FlxPoint
-	{
-		return graphic.getGraphicMidpoint(point);
-	}
-	
-	/**
-	 * Check and see if this object is currently on screen. Differs from FlxObject's implementation
-	 * in that it takes the actual graphic into account, not just the hitbox or bounding box or whatever.
-	 * 
-	 * @param	Camera		Specify which game camera you want.  If null getScreenPosition() will just grab the first global camera.
-	 * @return	Whether the object is on screen or not.
-	 */
-	override public function isOnScreen(?Camera:FlxCamera):Bool
-	{
-		return graphic.isOnScreen(Camera);
+		return spriteGraphic.getFlxFrameBitmapData();
 	}
 	
 	/**
@@ -535,7 +422,7 @@ class FlxSprite extends FlxBaseSprite<FlxAnimated>
 	 */
 	public inline function setFacingFlip(Direction:Int, FlipX:Bool, FlipY:Bool):Void
 	{
-		graphic.setFacingFlip(Direction, FlipX, FlipY);
+		spriteGraphic.setFacingFlip(Direction, FlipX, FlipY);
 	}
 	
 	/**
@@ -547,7 +434,7 @@ class FlxSprite extends FlxBaseSprite<FlxAnimated>
 	 */
 	public function setFrames(Frames:FlxFramesCollection, saveAnimations:Bool = true):FlxSprite
 	{
-		graphic.setFrames(Frames, saveAnimations);
+		spriteGraphic.setFrames(Frames, saveAnimations);
 		return this;
 	}
 	
@@ -568,69 +455,48 @@ class FlxSprite extends FlxBaseSprite<FlxAnimated>
 	
 	private function set_facing(Direction:Int):Int
 	{		
-		return graphic.facing = Direction;
+		return spriteGraphic.facing = Direction;
 	}
 	
 	private function set_alpha(Alpha:Float):Float
 	{
-		return graphic.alpha = Alpha;
+		return spriteGraphic.alpha = Alpha;
 	}
 	
 	private function set_color(Color:FlxColor):Int
 	{
-		return graphic.color = Color;
+		return spriteGraphic.color = Color;
 	}
 	
 	override private function set_angle(Value:Float):Float
 	{
 		angle = Value;
-		return graphic.angle = angle;
+		return spriteGraphic.angle = angle;
 	}
 	
 	private function set_blend(Value:BlendMode):BlendMode 
 	{
-		return graphic.blend = Value;
-	}
-	
-	/**
-	 * Internal function for setting graphic property for this object. 
-	 * It changes graphics' useCount also for better memory tracking.
-	 */
-	private function set_texture(Value:FlxTexture):FlxTexture
-	{
-		return graphic.texture = Value;
+		return spriteGraphic.blend = Value;
 	}
 	
 	private function get_clipRect():FlxRect
 	{
-		return graphic.clipRect;
+		return spriteGraphic.clipRect;
 	}
 	
 	private function set_clipRect(rect:FlxRect):FlxRect
 	{
-		return graphic.clipRect = rect;
-	}
-	
-	/**
-	 * Frames setter. Used by "loadGraphic" methods, but you can load generated frames yourself 
-	 * (this should be even faster since engine doesn't need to do bunch of additional stuff).
-	 * 
-	 * @param	Frames	frames to load into this sprite.
-	 * @return	loaded frames.
-	 */
-	private function set_frames(Frames:FlxFramesCollection):FlxFramesCollection
-	{
-		return graphic.frames = Frames;
+		return spriteGraphic.clipRect = rect;
 	}
 	
 	private function set_flipX(Value:Bool):Bool
 	{
-		return graphic.flipX = Value;
+		return spriteGraphic.flipX = Value;
 	}
 	
 	private function set_flipY(Value:Bool):Bool
 	{
-		return graphic.flipY = Value;
+		return spriteGraphic.flipY = Value;
 	}
 	
 	private function set_antialiasing(value:Bool):Bool

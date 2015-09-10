@@ -24,7 +24,7 @@ class FlxPrerotated extends FlxImage
 	
 	private var rotations = 1;
 	
-	public function new(?Parent:FlxBaseSprite<Dynamic>, ?Graphic:FlxGraphicAsset) 
+	public function new(?Parent:FlxBaseSprite, ?Graphic:FlxGraphicAsset) 
 	{
 		super(Parent, Graphic);
 	}

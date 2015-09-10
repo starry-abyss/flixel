@@ -174,7 +174,7 @@ class FlxTextBuffer extends FlxImage
 	 * @param   Size           The font size for this text object.
 	 * @param   EmbeddedFont   Whether this text field uses embedded fonts or not.
 	 */
-	public function new(Parent:FlxBaseSprite<FlxTextBuffer>, FieldWidth:Float = 0, ?Text:String, Size:Int = 8, EmbeddedFont:Bool = true)
+	public function new(Parent:FlxBaseSprite, FieldWidth:Float = 0, ?Text:String, Size:Int = 8, EmbeddedFont:Bool = true)
 	{
 		super(Parent);
 		

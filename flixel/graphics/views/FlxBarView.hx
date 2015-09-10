@@ -1,5 +1,6 @@
 package flixel.graphics.views;
 
+import flixel.FlxBaseSprite;
 import flixel.FlxCamera;
 import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.frames.FlxImageFrame;
@@ -595,7 +596,7 @@ class FlxBarView extends FlxImage
 		frontGraphic.offset.copyFrom(offset);
 	}
 	
-	override function set_parent(Value:FlxBaseSprite<Dynamic>):FlxBaseSprite<Dynamic> 
+	override function set_parent(Value:FlxBaseSprite):FlxBaseSprite 
 	{
 		super.set_parent(Value);
 		_parentBar = cast Value;

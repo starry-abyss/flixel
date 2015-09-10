@@ -110,7 +110,7 @@ class FlxImage extends FlxGraphic
 	 */
 	private var _facingFlip:Map<Int, {x:Bool, y:Bool}> = new Map<Int, {x:Bool, y:Bool}>();
 	
-	public function new(?Parent:FlxBaseSprite<Dynamic>, ?Graphic:FlxGraphicAsset) 
+	public function new(?Parent:FlxBaseSprite, ?Graphic:FlxGraphicAsset) 
 	{
 		super(Parent, Graphic);
 	}
@@ -331,11 +331,7 @@ class FlxImage extends FlxGraphic
 		}
 	}
 	
-	/**
-	 * Updates the sprite's hitbox (width, height, offset) according to the current scale. 
-	 * Also calls setOriginToCenter(). Called by setGraphicSize().
-	 */
-	public function updateHitbox():Void
+	override public function updateHitbox():Void
 	{
 		if (parent == null)
 			return;
@@ -353,25 +349,6 @@ class FlxImage extends FlxGraphic
 	public inline function centerOrigin():Void
 	{
 		origin.set(frameWidth * 0.5, frameHeight * 0.5);
-	}
-	
-	/**
-	 * Replaces all pixels with specified Color with NewColor pixels. 
-	 * WARNING: very expensive (especially on big graphics) as it iterates over every single pixel.
-	 * 
-	 * @param	Color				Color to replace
-	 * @param	NewColor			New color
-	 * @param	FetchPositions		Whether we need to store positions of pixels which colors were replaced
-	 * @return	Array replaced pixels positions
-	 */
-	public function replaceColor(Color:FlxColor, NewColor:FlxColor, FetchPositions:Bool = false):Array<FlxPoint>
-	{
-		var positions:Array<FlxPoint> = FlxBitmapDataUtil.replaceColor(texture.bitmap, Color, NewColor, FetchPositions);
-		if (positions != null)
-		{
-			dirty = true;
-		}
-		return positions;
 	}
 	
 	/**

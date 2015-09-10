@@ -13,6 +13,7 @@ import flixel.FlxSprite;
 import flixel.graphics.atlas.FlxAtlas;
 import flixel.graphics.atlas.FlxNode;
 import flixel.graphics.FlxTexture;
+import flixel.graphics.views.FlxGraphic;
 import flixel.graphics.views.FlxTextBuffer;
 import flixel.graphics.frames.FlxFramesCollection;
 import flixel.math.FlxMath;
@@ -32,7 +33,7 @@ using StringTools;
  * Extends FlxSprite to support rendering text. Can tint, fade, rotate and scale just like a sprite. Doesn't really animate 
  * though, as far as I know. Also does nice pixel-perfect centering on pixel fonts as long as they are only one liners.
  */
-class FlxText extends FlxBaseSprite<FlxTextBuffer>
+class FlxText extends FlxBaseSprite
 {
 	/**
 	 * The text being displayed.
@@ -124,6 +125,8 @@ class FlxText extends FlxBaseSprite<FlxTextBuffer>
 	
 	public var alpha(get, set):Float;
 	
+	public var textGraphic(default, null):FlxTextBuffer;
+	
 	/**
 	 * Creates a new FlxText object at the specified position.
 	 * 
@@ -138,9 +141,15 @@ class FlxText extends FlxBaseSprite<FlxTextBuffer>
 	public function new(X:Float = 0, Y:Float = 0, FieldWidth:Float = 0, ?Text:String, Size:Int = 8, EmbeddedFont:Bool = true)
 	{
 		super(X, Y);
-		graphic = new FlxTextBuffer(this, FieldWidth, Text, Size, EmbeddedFont);
+		graphic = textGraphic = new FlxTextBuffer(this, FieldWidth, Text, Size, EmbeddedFont);
 		allowCollisions = FlxObject.NONE;
 		moves = false;
+	}
+	
+	override public function destroy():Void 
+	{
+		super.destroy();
+		textGraphic = null;
 	}
 	
 	/**
@@ -153,7 +162,7 @@ class FlxText extends FlxBaseSprite<FlxTextBuffer>
 	 */
 	public function stampOnAtlas(atlas:FlxAtlas):Bool
 	{
-		return graphic.stampOnAtlas(atlas);
+		return textGraphic.stampOnAtlas(atlas);
 	}
 	
 	/**
@@ -175,7 +184,7 @@ class FlxText extends FlxBaseSprite<FlxTextBuffer>
 	 */
 	public function applyMarkup(input:String, rules:Array<FlxTextFormatMarkerPair>):Void
 	{
-		graphic.applyMarkup(input, rules);
+		textGraphic.applyMarkup(input, rules);
 	}
 	
 	/**
@@ -187,7 +196,7 @@ class FlxText extends FlxBaseSprite<FlxTextBuffer>
 	 */
 	public function addFormat(Format:FlxTextFormat, Start:Int = -1, End:Int = -1):Void
 	{
-		graphic.addFormat(Format, Start, End);
+		textGraphic.addFormat(Format, Start, End);
 	}
 	
 	/**
@@ -196,7 +205,7 @@ class FlxText extends FlxBaseSprite<FlxTextBuffer>
 	 */
 	public function removeFormat(Format:FlxTextFormat, ?Start:Int, ?End:Int):Void
 	{
-		graphic.removeFormat(Format, Start, End);
+		textGraphic.removeFormat(Format, Start, End);
 	}
 	
 	/**
@@ -204,7 +213,7 @@ class FlxText extends FlxBaseSprite<FlxTextBuffer>
 	 */
 	public function clearFormats():Void
 	{
-		graphic.clearFormats();
+		textGraphic.clearFormats();
 	}
 	
 	/**
@@ -223,7 +232,7 @@ class FlxText extends FlxBaseSprite<FlxTextBuffer>
 	public function setFormat(?Font:String, Size:Int = 8, Color:FlxColor = FlxColor.WHITE, ?Alignment:FlxTextAlign, 
 		?BorderStyle:FlxTextBorderStyle, BorderColor:FlxColor = FlxColor.TRANSPARENT, Embedded:Bool = true):FlxText
 	{
-		graphic.setFormat(Font, Size, Color, Alignment, BorderStyle, BorderColor, Embedded);
+		textGraphic.setFormat(Font, Size, Color, Alignment, BorderStyle, BorderColor, Embedded);
 		return this;
 	}
 	
@@ -237,194 +246,194 @@ class FlxText extends FlxBaseSprite<FlxTextBuffer>
 	 */
 	public function setBorderStyle(Style:FlxTextBorderStyle, Color:FlxColor = 0, Size:Float = 1, Quality:Float = 1):Void 
 	{
-		graphic.setBorderStyle(Style, Color, Size, Quality);
+		textGraphic.setBorderStyle(Style, Color, Size, Quality);
 	}
 	
 	public function drawFrame(Force:Bool = false):Void
 	{
-		graphic.drawFrame(Force);
+		textGraphic.drawFrame(Force);
 	}
 	
 	private function set_fieldWidth(value:Float):Float
 	{
-		return graphic.fieldWidth = value;
+		return textGraphic.fieldWidth = value;
 	}
 	
 	private function get_fieldWidth():Float
 	{
-		return graphic.fieldWidth;
+		return textGraphic.fieldWidth;
 	}
 	
 	private function set_autoSize(value:Bool):Bool
 	{
-		return graphic.autoSize = value;
+		return textGraphic.autoSize = value;
 	}
 	
 	private function get_autoSize():Bool
 	{
-		return graphic.autoSize;
+		return textGraphic.autoSize;
 	}
 	
 	private function get_text():String
 	{
-		return graphic.text;
+		return textGraphic.text;
 	}
 	
 	private function set_text(Text:String):String
 	{
-		return graphic.text = Text;
+		return textGraphic.text = Text;
 	}
 	
 	private function get_size():Int
 	{
-		return graphic.size;
+		return textGraphic.size;
 	}
 	
 	private function set_size(Size:Int):Int
 	{
-		return graphic.size = Size;
+		return textGraphic.size = Size;
 	}
 	
 	private function get_font():String
 	{
-		return graphic.font;
+		return textGraphic.font;
 	}
 	
 	private function set_font(Font:String):String
 	{
-		return graphic.font = Font;
+		return textGraphic.font = Font;
 	}
 	
 	private function get_embedded():Bool
 	{
-		return graphic.embedded;
+		return textGraphic.embedded;
 	}
 	
 	private function get_systemFont():String
 	{
-		return graphic.systemFont;
+		return textGraphic.systemFont;
 	}
 	
 	private function set_systemFont(Font:String):String
 	{
-		return graphic.systemFont = Font;
+		return textGraphic.systemFont = Font;
 	}
 	
 	private function get_bold():Bool 
 	{ 
-		return graphic.bold; 
+		return textGraphic.bold; 
 	}
 	
 	private function set_bold(value:Bool):Bool
 	{
-		return graphic.bold = value;
+		return textGraphic.bold = value;
 	}
 	
 	private function get_italic():Bool 
 	{ 
-		return graphic.italic; 
+		return textGraphic.italic; 
 	}
 	
 	private function set_italic(value:Bool):Bool
 	{
-		return graphic.italic = value;
+		return textGraphic.italic = value;
 	}
 	
 	private function get_wordWrap():Bool 
 	{ 
-		return graphic.wordWrap; 
+		return textGraphic.wordWrap; 
 	}
 	
 	private function set_wordWrap(value:Bool):Bool
 	{
-		return graphic.wordWrap = value;
+		return textGraphic.wordWrap = value;
 	}
 	
 	private function get_alignment():FlxTextAlign
 	{
-		return graphic.alignment;
+		return textGraphic.alignment;
 	}
 	
 	private function set_alignment(Alignment:FlxTextAlign):FlxTextAlign
 	{
-		return graphic.alignment = Alignment;
+		return textGraphic.alignment = Alignment;
 	}
 	
 	private function get_borderStyle():FlxTextBorderStyle
 	{		
-		return graphic.borderStyle;
+		return textGraphic.borderStyle;
 	}
 	
 	private function set_borderStyle(style:FlxTextBorderStyle):FlxTextBorderStyle
 	{		
-		return graphic.borderStyle = style;
+		return textGraphic.borderStyle = style;
 	}
 	
 	private function get_borderColor():FlxColor
 	{
-		return graphic.borderColor;
+		return textGraphic.borderColor;
 	}
 	
 	private function set_borderColor(Color:FlxColor):FlxColor
 	{
-		return graphic.borderColor = Color;
+		return textGraphic.borderColor = Color;
 	}
 	
 	private function get_borderSize():Float
 	{
-		return graphic.borderSize;
+		return textGraphic.borderSize;
 	}
 	
 	private function set_borderSize(Value:Float):Float
 	{
-		return graphic.borderSize = Value;
+		return textGraphic.borderSize = Value;
 	}
 	
 	private function get_borderQuality():Float
 	{
-		return graphic.borderQuality;
+		return textGraphic.borderQuality;
 	}
 	
 	private function set_borderQuality(Value:Float):Float
 	{
-		return graphic.borderQuality = Value;
+		return textGraphic.borderQuality = Value;
 	}
 	
 	override private function get_width():Float 
 	{
-		graphic.regenGraphics();
+		textGraphic.regenGraphics();
 		return super.get_width();
 	}
 	
 	override private function get_height():Float 
 	{
-		graphic.regenGraphics();
+		textGraphic.regenGraphics();
 		return super.get_height();
 	}
 	
 	private function get_textField():TextField
 	{
-		return graphic.textField;
+		return textGraphic.textField;
 	}
 	
 	private function get_color():FlxColor
 	{
-		return graphic.color;
+		return textGraphic.color;
 	}
 	
 	private function set_color(Value:FlxColor):FlxColor
 	{
-		return graphic.color = Value;
+		return textGraphic.color = Value;
 	}
 	
 	private function get_alpha():Float
 	{
-		return graphic.alpha;
+		return textGraphic.alpha;
 	}
 	
 	private function set_alpha(Value:Float):Float
 	{
-		return graphic.alpha = Value;
+		return textGraphic.alpha = Value;
 	}
 }
 

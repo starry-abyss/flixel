@@ -17,7 +17,7 @@ class FlxAnimated extends FlxImage
 	 */
 	public var animation:FlxAnimationController;
 	
-	public function new(?Parent:FlxBaseSprite<Dynamic>, ?Graphic:FlxGraphicAsset) 
+	public function new(?Parent:FlxBaseSprite, ?Graphic:FlxGraphicAsset) 
 	{
 		super(Parent, Graphic);
 	}
