@@ -245,4 +245,9 @@ class FlxPrerotated extends FlxImage
 		
 		return rv;
 	}
+	
+	override private function get_rotated():Bool
+	{
+		return (bakedRotationAngle == 0) ? (angle != 0) : false;
+	}
 }

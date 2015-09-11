@@ -14,6 +14,7 @@ import openfl.display.BitmapData;
 import openfl.display.BlendMode;
 import openfl.geom.ColorTransform;
 import openfl.geom.Matrix;
+import openfl.geom.Point;
 
 /**
  * ...
@@ -25,8 +26,7 @@ class FlxImage extends FlxGraphic
 	 * The actual Flash BitmapData object representing the current display state of the sprite.
 	 * WARNING: can be null in FLX_RENDER_TILE mode unless you call getFlxFrameBitmapData() beforehand.
 	 */
-	// TODO: maybe convert this var to property...
-	public var framePixels:BitmapData;
+	public var framePixels(get, set):BitmapData;
 	
 	public var angle(default, set):Float = 1.0;
 	
@@ -123,6 +123,8 @@ class FlxImage extends FlxGraphic
 	 */
 	private var _facingFlip:Map<Int, {x:Bool, y:Bool}> = new Map<Int, {x:Bool, y:Bool}>();
 	
+	private var _framePixels:BitmapData;
+	
 	public function new(?Parent:FlxBaseSprite, ?Graphic:FlxGraphicAsset) 
 	{
 		super(Parent, Graphic);
@@ -150,6 +152,8 @@ class FlxImage extends FlxGraphic
 		blend = null;
 		transformMatrix = null;
 		_frame = FlxDestroyUtil.destroy(_frame);
+		
+		_framePixels = FlxDestroyUtil.dispose(_framePixels);
 	}
 	
 	/**
@@ -471,33 +475,39 @@ class FlxImage extends FlxGraphic
 		getFlxFrameBitmapData();
 	}
 	
-	/**
-	 * Retrieves BitmapData of current FlxFrame. Updates framePixels.
-	 */
-	public function getFlxFrameBitmapData():BitmapData
+	override public function getFlxFrameBitmapData():BitmapData
 	{
-		if (_frame != null && dirty)
+		if (dirty)
+		{
+			_framePixels = paintFrame(_framePixels, _flashPointZero, false, true);
+			dirty = false;
+		}
+		
+		return _framePixels;
+	}
+	
+	override public function paintFrame(canvas:BitmapData, point:Point = null, mergeAlpha:Bool = true, disposeIfNotEqual:Bool = false):BitmapData
+	{
+		if (_frame != null)
 		{
 			var doFlipX = flipX != _frame.flipX;
 			var doFlipY = flipY != _frame.flipY;
 			if (!doFlipX && !doFlipY && _frame.type == FlxFrameType.REGULAR)
 			{
-				framePixels = _frame.paint(framePixels, _flashPointZero, false, true);
+				canvas = _frame.paint(canvas, point, mergeAlpha, disposeIfNotEqual);
 			}
 			else
 			{
-				framePixels = _frame.paintRotatedAndFlipped(framePixels, _flashPointZero, FlxFrameAngle.ANGLE_0, flipX, flipY, false, true);
+				canvas = _frame.paintRotatedAndFlipped(canvas, point, FlxFrameAngle.ANGLE_0, flipX, flipY, mergeAlpha, disposeIfNotEqual);
 			}
 			
 			if (useColorTransform)
 			{
-				framePixels.colorTransform(_flashRect, colorTransform);
+				canvas.colorTransform(_flashRect, colorTransform);
 			}
-			
-			dirty = false;
 		}
 		
-		return framePixels;
+		return canvas;
 	}
 	
 	/**
@@ -709,5 +719,21 @@ class FlxImage extends FlxGraphic
 		#end
 		dirty = (flipY != Value) || dirty;
 		return flipY = Value;
+	}
+	
+	override private function get_rotated():Bool
+	{
+		return (angle != 0);
+	}
+	
+	private function get_framePixels():BitmapData
+	{
+		return getFlxFrameBitmapData();
+	}
+	
+	private function set_framePixels(Value:BitmapData):BitmapData
+	{
+		// TODO: handle this scenario on native targets as well...
+		return _framePixels = Value;
 	}
 }

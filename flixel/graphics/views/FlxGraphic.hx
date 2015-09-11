@@ -110,6 +110,8 @@ class FlxGraphic implements IFlxDestroyable
 	
 	public var graphicLoadedCallback:Void->Void;
 	
+	public var rotated(get, null):Bool;
+	
 	/**
 	 * Internal, reused frequently during drawing and animating.
 	 */
@@ -427,10 +429,7 @@ class FlxGraphic implements IFlxDestroyable
 	
 	private function get_pixels():BitmapData
 	{
-		if (texture == null)
-			return null;
-		
-		return texture.bitmap;
+		return (texture != null) ? texture.bitmap : null;
 	}
 	
 	private function set_pixels(Pixels:BitmapData):BitmapData
@@ -574,6 +573,11 @@ class FlxGraphic implements IFlxDestroyable
 		return parent = Value;
 	}
 	
+	private function get_rotated():Bool
+	{
+		return false;
+	}
+	
 	/**
 	 * Resets some important variables for sprite optimization and rendering.
 	 */
@@ -672,6 +676,32 @@ class FlxGraphic implements IFlxDestroyable
 		}
 		
 		return point.set(pX + frameWidth * 0.5, pY + frameHeight * 0.5);
+	}
+	
+	/**
+	 * Retrieves BitmapData of current FlxFrame. Updates framePixels.
+	 */
+	// TODO: make it private???
+	public function getFlxFrameBitmapData():BitmapData
+	{
+		return pixels;
+	}
+	
+	/**
+	 * Draws current frame of this image on specified surface
+	 * 
+	 * @param	canvas
+	 * @param	point
+	 * @param	mergeAlpha
+	 * @param	disposeIfNotEqual
+	 * @return
+	 */
+	public function paintFrame(canvas:BitmapData, point:Point = null, mergeAlpha:Bool = true, disposeIfNotEqual:Bool = false):BitmapData
+	{
+		if (frame != null)
+			canvas = frame.paint(canvas, point, mergeAlpha, disposeIfNotEqual);
+		
+		return canvas;
 	}
 	
 	// TODO: implement it here and in subclasses...
