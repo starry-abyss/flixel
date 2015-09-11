@@ -115,18 +115,22 @@ class FlxGraphic implements IFlxDestroyable
 	/**
 	 * Internal, reused frequently during drawing and animating.
 	 */
+	@:allow(flixel)
 	private var _flashPoint:Point;
 	/**
 	 * Internal, reused frequently during drawing and animating.
 	 */
+	@:allow(flixel)
 	private var _flashRect:Rectangle;
 	/**
 	 * Internal, reused frequently during drawing and animating.
 	 */
+	@:allow(flixel)
 	private var _flashRect2:Rectangle;
 	/**
 	 * Internal, reused frequently during drawing and animating. Always contains (0,0).
 	 */
+	@:allow(flixel)
 	private var _flashPointZero:Point;
 	
 	/**
