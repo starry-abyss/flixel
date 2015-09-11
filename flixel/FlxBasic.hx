@@ -7,7 +7,7 @@ import flixel.util.FlxStringUtil;
  * This is a useful "generic" Flixel object. Both FlxObject and 
  * FlxGroup extend this class. Has no size, position or graphical data.
  */
-class FlxBasic implements IFlxDestroyable
+class FlxBasic extends FlxAtomic
 {
 	#if !FLX_NO_DEBUG
 	/**
@@ -19,19 +19,6 @@ class FlxBasic implements IFlxDestroyable
 	private static var visibleCount:Int = 0;
 	#end
 	
-	/**
-	 * IDs seem like they could be pretty useful, huh?
-	 * They're not actually used for anything yet though.
-	 */
-	public var ID:Int = -1;
-	/**
-	 * Controls whether update() is automatically called by FlxState/FlxGroup.
-	 */
-	public var active(default, set):Bool = true;
-	/**
-	 * Controls whether draw() is automatically called by FlxState/FlxGroup.
-	 */
-	public var visible(default, set):Bool = true;
 	/**
 	 * Useful state for many game objects - "dead" (!alive) vs alive. kill() and
 	 * revive() both flip this switch (along with exists, but you can override that).
@@ -60,13 +47,12 @@ class FlxBasic implements IFlxDestroyable
 	
 	private var _cameras:Array<FlxCamera>;
 	
-	public function new() {}
+	public function new() 
+	{
+		super();
+	}
 	
-	/**
-	 * WARNING: This will remove this object entirely. Use kill() if you want to disable it temporarily only and revive() it later.
-	 * Override this function to null out variables manually or call destroy() on class members if necessary. Don't forget to call super.destroy()!
-	 */
-	public function destroy():Void 
+	override public function destroy():Void 
 	{
 		exists = false;
 		_cameras = null;
@@ -92,22 +78,14 @@ class FlxBasic implements IFlxDestroyable
 		exists = true;
 	}
 	
-	/**
-	 * Override this function to update your class's position and appearance.
-	 * This is where most of your game rules and behavioral code will go.
-	 */
-	public function update(elapsed:Float):Void 
+	override public function update(elapsed:Float):Void 
 	{ 
 		#if !FLX_NO_DEBUG
 		activeCount++;
 		#end
 	}
 	
-	/**
-	 * Override this function to control how the object is drawn.
-	 * Overriding draw() is rarely necessary, but can be very useful.
-	 */
-	public function draw():Void
+	override public function draw():Void
 	{
 		#if !FLX_NO_DEBUG
 		visibleCount++;
@@ -121,16 +99,6 @@ class FlxBasic implements IFlxDestroyable
 			LabelValuePair.weak("visible", visible),
 			LabelValuePair.weak("alive", alive),
 			LabelValuePair.weak("exists", exists)]);
-	}
-	
-	private function set_visible(Value:Bool):Bool
-	{
-		return visible = Value;
-	}
-	
-	private function set_active(Value:Bool):Bool
-	{
-		return active = Value;
 	}
 	
 	private function set_exists(Value:Bool):Bool
