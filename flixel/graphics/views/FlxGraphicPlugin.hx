@@ -1,33 +1,26 @@
 package flixel.graphics.views;
 
 import flixel.FlxAtomic;
+import flixel.FlxBaseSprite;
+import flixel.FlxObjectPlugin;
 
 /**
  * ...
  * @author Zaphod
  */
-class FlxGraphicPlugin extends FlxAtomic
+class FlxGraphicPlugin extends FlxObjectPlugin
 {
 	public var graphic:FlxGraphic;
 	
-	public function new(graphic:FlxGraphic) 
+	public function new(sprite:FlxBaseSprite) 
 	{
-		super();
-		this.graphic = graphic;
+		super(sprite);
+		this.graphic = sprite.graphic;
 	}
 	
 	override public function destroy():Void
 	{
+		super.destroy();
 		graphic = null;
-	}
-	
-	override public function update(elapsed:Float):Void
-	{
-		
-	}
-	
-	override public function draw():Void
-	{
-		
 	}
 }
