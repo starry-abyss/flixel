@@ -700,7 +700,7 @@ class FlxGraphic implements IFlxDestroyable
 	 * @param	disposeIfNotEqual
 	 * @return
 	 */
-	public function paintFrame(canvas:BitmapData, point:Point = null, mergeAlpha:Bool = true, disposeIfNotEqual:Bool = false):BitmapData
+	public function paintOn(canvas:BitmapData, point:Point = null, mergeAlpha:Bool = true, disposeIfNotEqual:Bool = false):BitmapData
 	{
 		if (frame != null)
 			canvas = frame.paint(canvas, point, mergeAlpha, disposeIfNotEqual);
@@ -712,5 +712,45 @@ class FlxGraphic implements IFlxDestroyable
 	public function clone():FlxGraphic
 	{
 		return null;
+	}
+	
+	/**
+	 * Draws / stamps this FlxSprite onto specified BitmapData object at specified position. 
+	 * @param	canvas	BitmapData to draw this sprite to.
+	 * @param	x		Horizontal position
+	 * @param	y		Vertical position
+	 */
+	public function drawOn(canvas:BitmapData, x:Int = 0, y:Int = 0):Void
+	{
+		if (this.texture == null || canvas == null)
+			return;
+		
+		var bitmapData:BitmapData = getFlxFrameBitmapData();
+		_flashPoint.x = x;
+		_flashPoint.y = y;
+		_flashRect2.width = bitmapData.width;
+		_flashRect2.height = bitmapData.height;
+		canvas.copyPixels(bitmapData, _flashRect2, _flashPoint, null, null, true);
+		_flashRect2.width = texture.width;
+		_flashRect2.height = texture.height;
+	}
+	
+	/**
+	 * Stamps / draws another FlxSprite onto this FlxSprite. 
+	 * This function is NOT intended to replace draw()!
+	 * 
+	 * @param	Brush	The sprite you want to use as a brush or stamp or pen or whatever.
+	 * @param	X		The X coordinate of the brush's top left corner on this sprite.
+	 * @param	Y		They Y coordinate of the brush's top left corner on this sprite.
+	 */
+	public function stamp(Brush:FlxGraphic, X:Int = 0, Y:Int = 0):Void
+	{
+		if (this.texture == null || Brush.texture == null)
+			throw "Cannot stamp to or from a FlxSprite with no graphics.";
+		
+		Brush.drawOn(texture.bitmap, X + Std.int(frame.frame.x), Y + Std.int(frame.frame.y));
+		#if FLX_RENDER_BLIT
+		dirty = true;
+		#end
 	}
 }

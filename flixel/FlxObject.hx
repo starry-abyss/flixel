@@ -533,9 +533,6 @@ class FlxObject extends FlxBasic
 	private var _point:FlxPoint = FlxPoint.get();
 	private var _rect:FlxRect = FlxRect.get();
 	
-	private var _plugins:Array<FlxObjectPlugin>;
-	private var _numPlugins:Int = 0;
-	
 	/**
 	 * @param	X		The X-coordinate of the point in space.
 	 * @param	Y		The Y-coordinate of the point in space.
@@ -592,47 +589,6 @@ class FlxObject extends FlxBasic
 		last = FlxDestroyUtil.put(last);
 		_point = FlxDestroyUtil.put(_point);
 		_rect = FlxDestroyUtil.put(_rect);
-		
-		_plugins = FlxDestroyUtil.destroyArray(_plugins);
-	}
-	
-	public function addPlugin(plugin:FlxObjectPlugin):FlxObject
-	{
-		if (_plugins == null)
-		{
-			_plugins = [];
-			_plugins[_numPlugins++] = plugin;
-			plugin.parent = this;
-		}
-		else if (_plugins.indexOf(plugin) < 0)
-		{
-			_plugins[_numPlugins++] = plugin;
-			plugin.parent = this;
-		}
-		
-		return this;
-	}
-	
-	public function removePlugin(plugin:FlxObjectPlugin, dispose:Bool = false):FlxObject
-	{
-		if (_plugins != null && _plugins.remove(plugin))
-		{
-			_numPlugins--;
-			plugin.parent = null;
-			
-			if (dispose)
-				plugin.destroy();
-		}
-		
-		return this;
-	}
-	
-	public inline function updatePlugins(elapsed:Float):Void
-	{
-		for (plugin in _plugins)
-		{
-			if (plugin.active)	plugin.update(elapsed);
-		}
 	}
 	
 	/**
@@ -654,9 +610,6 @@ class FlxObject extends FlxBasic
 		
 		wasTouching = touching;
 		touching = NONE;
-		
-		if (_numPlugins > 0)
-			updatePlugins(elapsed);
 	}
 	
 	/**
@@ -688,22 +641,11 @@ class FlxObject extends FlxBasic
 	 */
 	override public function draw():Void
 	{
-		if (_numPlugins > 0)
-			drawPlugins();
-		
 		#if !FLX_NO_DEBUG
 		super.draw();
 		if (FlxG.debugger.drawDebug)
 			drawDebug();
 		#end
-	}
-	
-	public inline function drawPlugins():Void
-	{
-		for (plugin in _plugins)
-		{
-			if (plugin.visible)	plugin.draw();
-		}
 	}
 	
 	/**

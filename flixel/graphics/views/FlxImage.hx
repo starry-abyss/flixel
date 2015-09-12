@@ -274,43 +274,42 @@ class FlxImage extends FlxGraphic
 	 * @param	X		The X coordinate of the brush's top left corner on this sprite.
 	 * @param	Y		They Y coordinate of the brush's top left corner on this sprite.
 	 */
-	public function stamp(Brush:FlxImage, X:Int = 0, Y:Int = 0):Void
+	override public function stamp(Brush:FlxGraphic, X:Int = 0, Y:Int = 0):Void
 	{
-		if (this.texture == null || Brush.texture == null)
-			throw "Cannot stamp to or from a FlxSprite with no graphics.";
+		super.stamp(Brush, X, Y);
+		#if FLX_RENDER_BLIT
+		calcFrame();
+		#end
+	}
+	
+	override public function drawOn(canvas:BitmapData, x:Int = 0, y:Int = 0):Void 
+	{
+		if (this.texture == null || canvas == null)
+			return;
 		
-		var bitmapData:BitmapData = Brush.getFlxFrameBitmapData();
+		var bitmapData:BitmapData = getFlxFrameBitmapData();
 		
 		if (isSimpleRenderBlit()) // simple render
 		{
-			_flashPoint.x = X + frame.frame.x;
-			_flashPoint.y = Y + frame.frame.y;
+			_flashPoint.x = x;
+			_flashPoint.y = y;
 			_flashRect2.width = bitmapData.width;
 			_flashRect2.height = bitmapData.height;
-			texture.bitmap.copyPixels(bitmapData, _flashRect2, _flashPoint, null, null, true);
-			_flashRect2.width = texture.bitmap.width;
-			_flashRect2.height = texture.bitmap.height;
-			#if FLX_RENDER_BLIT
-			dirty = true;
-			calcFrame();
-			#end
+			canvas.copyPixels(bitmapData, _flashRect2, _flashPoint, null, null, true);
+			_flashRect2.width = texture.width;
+			_flashRect2.height = texture.height;
 		}
 		else // complex render
 		{
 			_matrix.identity();
-			_matrix.translate(-Brush.origin.x, -Brush.origin.y);
-			_matrix.scale(Brush.scale.x, Brush.scale.y);
-			if (Brush.parent.angle != 0)
+			_matrix.translate( -origin.x, -origin.y);
+			_matrix.scale(scale.x, scale.y);
+			if (rotated)
 			{
-				_matrix.rotate(Brush.parent.angle * FlxAngle.TO_RAD);
+				_matrix.rotate(angle * FlxAngle.TO_RAD);
 			}
-			_matrix.translate(X + frame.frame.x + Brush.origin.x, Y + frame.frame.y + Brush.origin.y);
-			var brushBlend:BlendMode = Brush.blend;
-			texture.bitmap.draw(bitmapData, _matrix, null, brushBlend, null, Brush.antialiasing);
-			#if FLX_RENDER_BLIT
-			dirty = true;
-			calcFrame();
-			#end
+			_matrix.translate(x + origin.x, y + origin.y);
+			canvas.draw(bitmapData, _matrix, null, blend, null, antialiasing);
 		}
 	}
 	
@@ -477,35 +476,34 @@ class FlxImage extends FlxGraphic
 	
 	override public function getFlxFrameBitmapData():BitmapData
 	{
-		if (dirty)
+		if (dirty && _frame != null)
 		{
-			_framePixels = paintFrame(_framePixels, _flashPointZero, false, true);
+			var doFlipX = flipX != _frame.flipX;
+			var doFlipY = flipY != _frame.flipY;
+			if (!doFlipX && !doFlipY && _frame.type == FlxFrameType.REGULAR)
+			{
+				_framePixels = _frame.paint(_framePixels, _flashPointZero, false, true);
+			}
+			else
+			{
+				_framePixels = _frame.paintRotatedAndFlipped(_framePixels, _flashPointZero, FlxFrameAngle.ANGLE_0, flipX, flipY, false, true);
+			}
+			
+			if (useColorTransform)
+			{
+				_framePixels.colorTransform(_flashRect, colorTransform);
+			}
+			
 			dirty = false;
 		}
 		
 		return _framePixels;
 	}
 	
-	override public function paintFrame(canvas:BitmapData, point:Point = null, mergeAlpha:Bool = true, disposeIfNotEqual:Bool = false):BitmapData
+	override public function paintOn(canvas:BitmapData, point:Point = null, mergeAlpha:Bool = true, disposeIfNotEqual:Bool = false):BitmapData
 	{
 		if (_frame != null)
-		{
-			var doFlipX = flipX != _frame.flipX;
-			var doFlipY = flipY != _frame.flipY;
-			if (!doFlipX && !doFlipY && _frame.type == FlxFrameType.REGULAR)
-			{
-				canvas = _frame.paint(canvas, point, mergeAlpha, disposeIfNotEqual);
-			}
-			else
-			{
-				canvas = _frame.paintRotatedAndFlipped(canvas, point, FlxFrameAngle.ANGLE_0, flipX, flipY, mergeAlpha, disposeIfNotEqual);
-			}
-			
-			if (useColorTransform)
-			{
-				canvas.colorTransform(_flashRect, colorTransform);
-			}
-		}
+			canvas.copyPixels(framePixels, _flashRect, point, null, null, mergeAlpha);
 		
 		return canvas;
 	}
