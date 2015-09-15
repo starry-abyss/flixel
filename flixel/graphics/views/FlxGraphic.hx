@@ -1,6 +1,7 @@
 package flixel.graphics.views;
 
 import flash.display.BitmapData;
+import flixel.FlxAtomic;
 import flixel.FlxBaseSprite;
 import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.frames.FlxFramesCollection;
@@ -22,18 +23,8 @@ class GraphicDefault extends BitmapData {}
  * ...
  * @author Zaphod
  */
-class FlxGraphic implements IFlxDestroyable
+class FlxGraphic extends FlxAtomic
 {
-	/**
-	 * If the graphic should update.
-	 */
-	public var active:Bool;
-	
-	/**
-	 * If the graphic should render.
-	 */
-	public var visible:Bool;
-	
 	/**
 	 * Controls whether the object is smoothed when rotated, affects performance.
 	 */
@@ -112,6 +103,10 @@ class FlxGraphic implements IFlxDestroyable
 	
 	public var rotated(get, null):Bool;
 	
+	private var _plugins:Array<FlxGraphicPlugin>;
+	
+	public var numPlugins(default, null):Int = 0;
+	
 	/**
 	 * Internal, reused frequently during drawing and animating.
 	 */
@@ -144,6 +139,7 @@ class FlxGraphic implements IFlxDestroyable
 	
 	public function new(?Parent:FlxBaseSprite, ?Graphic:FlxGraphicAsset)
 	{
+		super();
 		parent = Parent;
 		initVars();
 		
@@ -155,6 +151,8 @@ class FlxGraphic implements IFlxDestroyable
 	{
 		active = true;
 		visible = true;
+		
+		_plugins = [];
 		
 		_flashPoint = new Point();
 		_flashRect = new Rectangle();
@@ -237,16 +235,108 @@ class FlxGraphic implements IFlxDestroyable
 		return this;
 	}
 	
-	/**
-	 * Updates the graphic.
-	 */
-	public function update(elapsed:Float):Void {  }
+	public function addPlugin(plugin:FlxGraphicPlugin):FlxGraphic
+	{
+		if (getPluginIndex(plugin) < 0)
+		{
+			_plugins.push(plugin);
+			numPlugins++;
+		}
+		
+		return this;
+	}
+	
+	public function addPluginAt(plugin:FlxGraphicPlugin, index:Int = 0):FlxGraphic
+	{
+		if (index < 0)	index = 0;
+		if (index > numPlugins)	index = numPlugins;
+		
+		if (getPluginIndex(plugin) < 0)
+		{
+			_plugins.insert(index, plugin);
+			numPlugins++;
+		}
+		
+		return this;
+	}
+	
+	public function addPluginBefore(insert:FlxGraphicPlugin, search:FlxGraphicPlugin):FlxGraphic
+	{
+		var index:Int = getPluginIndex(search);
+		index = (index >= 0) ? index : 0;
+		return addPluginAt(insert, index);
+	}
+	
+	public function addPluginAfter(insert:FlxGraphicPlugin, search:FlxGraphicPlugin):FlxGraphic
+	{
+		var index:Int = getPluginIndex(search);
+		index = (index >= 0) ? (index + 1) : numPlugins;
+		return addPluginAt(insert, index);
+	}
+	
+	public inline function getPluginIndex(plugin:FlxGraphicPlugin):Int
+	{
+		return _plugins.indexOf(plugin);
+	}
+	
+	public function removePlugin(plugin:FlxGraphicPlugin, dispose:Bool = false):FlxGraphic
+	{
+		if (_plugins.remove(plugin))
+		{
+			numPlugins--;
+			if (dispose)	plugin.destroy();
+		}
+		
+		return this;
+	}
+	
+	public function removePluginAt(index:Int = 0, dispose:Bool = false):FlxGraphic
+	{
+		if (index < 0 || index >= numPlugins)	return this;
+		
+		var plugin:FlxGraphicPlugin = _plugins[i];
+		return removePlugin(plugin, dispose);
+	}
+	
+	public function clearPlugins(dispose:Bool):FlxGraphic
+	{
+		if (dispose)
+		{
+			for (i in 0...numPlugins)
+			{
+				_plugins[i].destroy();
+			}
+		}
+		
+		_plugins.splice(0, numPlugins);
+		numPlugins = 0;
+		return this;
+	}
+	
+	override public function update(elapsed:Float):Void 
+	{
+		var plugin:FlxGraphicPlugin;
+		for (i in 0...numPlugins)
+		{
+			plugin = _plugins[i];
+			if (plugin.active)
+				plugin.update(elapsed);
+		}
+	}
 	
 	/**
 	 * Draws the graphic.
 	 */
-	public function draw():Void
+	override public function draw():Void
 	{ 
+		var plugin:FlxGraphicPlugin;
+		for (i in 0...numPlugins)
+		{
+			plugin = _plugins[i];
+			if (plugin.visible)
+				plugin.draw();
+		}
+		
 		if (frame == null)
 		{
 			#if !FLX_NO_DEBUG
@@ -296,10 +386,13 @@ class FlxGraphic implements IFlxDestroyable
 	/**
 	 * Helps to clean the memory from this graphic object
 	 */
-	public function destroy():Void
+	override public function destroy():Void
 	{ 
 		_cameras = null;
 		graphicLoadedCallback = null;
+		
+		_plugins = FlxDestroyUtil.destroyArray(_plugins);
+		numPlugins = 0;
 		
 		offset = FlxDestroyUtil.put(offset);
 		scrollFactor = FlxDestroyUtil.put(scrollFactor);
@@ -382,19 +475,14 @@ class FlxGraphic implements IFlxDestroyable
 		if (parent == null)	return point;
 		
 		if (point == null)
-		{
 			point = FlxPoint.get();
-		}
+		
 		if (Camera == null)
-		{
 			Camera = FlxG.camera;
-		}
 		
 		point.set(parent.x, parent.y);
 		if (parent != null && parent.pixelPerfectPosition)
-		{
 			point.floor();
-		}
 		
 		return point.subtract(Camera.scroll.x * scrollFactor.x, Camera.scroll.y * scrollFactor.y);
 	}
@@ -412,9 +500,8 @@ class FlxGraphic implements IFlxDestroyable
 	{
 		var positions:Array<FlxPoint> = FlxBitmapDataUtil.replaceColor(texture.bitmap, Color, NewColor, FetchPositions);
 		if (positions != null)
-		{
 			dirty = true;
-		}
+		
 		return positions;
 	}
 	
@@ -477,17 +564,13 @@ class FlxGraphic implements IFlxDestroyable
 	 */
 	private function set_texture(Value:FlxTexture):FlxTexture
 	{
-		var oldGraphic:FlxTexture = texture;
+		var oldTexture:FlxTexture = texture;
 		
 		if ((texture != Value) && (Value != null))
-		{
 			Value.useCount++;
-		}
 		
-		if ((oldGraphic != null) && (oldGraphic != Value))
-		{
-			oldGraphic.useCount--;
-		}
+		if ((oldTexture != null) && (oldTexture != Value))
+			oldTexture.useCount--;
 		
 		return texture = Value;
 	}

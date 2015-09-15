@@ -6,7 +6,7 @@ package flixel;
  */
 class FlxObjectPlugin extends FlxAtomic
 {
-	public var parent(default, set):FlxObject;
+	public var parent:FlxObject;
 	
 	public function new(Parent:FlxObject) 
 	{
@@ -18,10 +18,5 @@ class FlxObjectPlugin extends FlxAtomic
 	{
 		super.destroy();
 		parent = null;
-	}
-	
-	private function set_parent(Value:FlxObject):FlxObject
-	{
-		return parent = Value;
 	}
 }

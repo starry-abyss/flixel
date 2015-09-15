@@ -177,8 +177,8 @@ class BitmapFrontEnd
 	{
 		if (Std.is(Graphic, FlxTexture))
 		{
-			var graphic:FlxTexture = cast(Graphic, FlxTexture);
-			return FlxTexture.fromGraphic(graphic, Unique, Key);
+			var texture:FlxTexture = cast(Graphic, FlxTexture);
+			return FlxTexture.fromGraphic(texture, Unique, Key);
 		}
 		else if (Std.is(Graphic, BitmapData))
 		{
@@ -197,13 +197,12 @@ class BitmapFrontEnd
 	 * @param	graphic	FlxTexture to store in the cache.
 	 * @return	cached FlxTexture object.
 	 */
-	public inline function addGraphic(graphic:FlxTexture):FlxTexture
+	public inline function addGraphic(texture:FlxTexture):FlxTexture
 	{
-		if (!_cache.exists(graphic.key))
-		{
-			_cache.set(graphic.key, graphic);
-		}
-		return graphic;
+		if (!_cache.exists(texture.key))
+			_cache.set(texture.key, texture);
+		
+		return texture;
 	}
 	
 	/**
@@ -334,10 +333,10 @@ class BitmapFrontEnd
 	 * Totally removes specified FlxTexture object.
 	 * @param	FlxTexture object you want to remove and destroy.
 	 */
-	public function remove(graphic:FlxTexture):Void
+	public function remove(texture:FlxTexture):Void
 	{
-		if (graphic != null)
-			removeByKey(graphic.key);
+		if (texture != null)
+			removeByKey(texture.key);
 	}
 	
 	/**
@@ -368,11 +367,11 @@ class BitmapFrontEnd
 		#end
 	}
 	
-	public function removeIfNoUse(graphic:FlxTexture):Void
+	public function removeIfNoUse(texture:FlxTexture):Void
 	{
-		if (graphic != null && graphic.useCount == 0 && !graphic.persist)
+		if (texture != null && texture.useCount == 0 && !texture.persist)
 		{
-			remove(graphic);
+			remove(texture);
 		}
 	}
 	

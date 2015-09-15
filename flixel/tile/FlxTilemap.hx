@@ -225,7 +225,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 			_tileWidth = Std.int(value.frames[0].sourceSize.x);
 			_tileHeight = Std.int(value.frames[0].sourceSize.y);
 			_flashRect.setTo(0, 0, _tileWidth, _tileHeight);
-			graphic = value.parent;
+			texture = value.parent;
 			postGraphicLoad();
 		}
 		
@@ -799,7 +799,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		}
 		else
 		{
-			image = FlxImageFrame.fromEmptyFrame(graphic, FlxRect.get(0, 0, _tileWidth, _tileHeight));
+			image = FlxImageFrame.fromEmptyFrame(texture, FlxRect.get(0, 0, _tileWidth, _tileHeight));
 		}
 		
 		var tileX:Float = X * _tileWidth * scale.x + x;
@@ -847,7 +847,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		var scaledWidth:Float = _scaledTileWidth;
 		var scaledHeight:Float = _scaledTileHeight;
 		
-		var drawItem = Camera.startQuadBatch(graphic, isColored, blend);
+		var drawItem = Camera.startQuadBatch(texture, isColored, blend);
 	#end
 		
 		// Copy tile images into the tile buffer
@@ -1072,24 +1072,21 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	 * Internal function for setting graphic property for this object. 
 	 * It changes graphic' useCount also for better memory tracking.
 	 */
-	private function set_graphic(Value:FlxTexture):FlxTexture
+	private function set_texture(Value:FlxTexture):FlxTexture
 	{
 		//If graphics are changing
-		if (graphic != Value)
+		if (texture != Value)
 		{
 			//If new graphic is not null, increase its use count
 			if (Value != null)
-			{
 				Value.useCount++;
-			}
+			
 			//If old graphic is not null, decrease its use count
-			if (graphic != null)
-			{
-				graphic.useCount--;
-			}
+			if (texture != null)
+				texture.useCount--;
 		}
 		
-		return graphic = Value;
+		return texture = Value;
 	}
 	
 	override private function set_pixelPerfectRender(Value:Bool):Bool 

@@ -6,6 +6,7 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.graphics.frames.FlxBitmapFont;
 import flixel.graphics.frames.FlxFrame;
+import flixel.graphics.views.FlxImage;
 import flixel.math.FlxPoint;
 import flixel.text.FlxText.FlxTextAlign;
 import flixel.text.FlxText.FlxTextBorderStyle;
@@ -1753,5 +1754,13 @@ class FlxBitmapText extends FlxSprite
 	{
 		checkPendingChanges(true);
 		return super.get_height();
+	}
+}
+
+class FlxBitmapTextGraphic extends FlxImage
+{
+	public function new(Parent:FlxBitmapText)
+	{
+		super(Parent);
 	}
 }

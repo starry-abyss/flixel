@@ -241,6 +241,8 @@ class FlxTextBuffer extends FlxImage
 	 */
 	public function stampOnAtlas(atlas:FlxAtlas):Bool
 	{
+		// TODO: move this method to FlxGraphic...
+		
 		if (_regen)
 		{
 			regenGraphics();
@@ -678,9 +680,8 @@ class FlxTextBuffer extends FlxImage
 	private function set_borderColor(Color:FlxColor):FlxColor
 	{
 		if (borderColor != Color && borderStyle != NONE)
-		{
 			_regen = true;
-		}
+		
 		_hasBorderAlpha = Color.alphaFloat < 1;
 		borderColor = Color;
 		return Color;
@@ -688,13 +689,10 @@ class FlxTextBuffer extends FlxImage
 	
 	private function set_borderSize(Value:Float):Float
 	{
-		if (Value != borderSize && borderStyle != NONE)
-		{			
+		if (Value != borderSize && borderStyle != NONE)	
 			_regen = true;
-		}
-		borderSize = Value;
 		
-		return Value;
+		return borderSize = Value;
 	}
 	
 	private function set_borderQuality(Value:Float):Float
@@ -702,21 +700,17 @@ class FlxTextBuffer extends FlxImage
 		Value = FlxMath.bound(Value, 0, 1);
 		
 		if (Value != borderQuality && borderStyle != NONE)
-		{
 			_regen = true;
-		}
 		
-		borderQuality = Value;
-		
-		return Value;
+		return borderQuality = Value;
 	}
 	
 	override private function set_texture(Value:FlxTexture):FlxTexture 
 	{
-		var oldGraphic:FlxTexture = texture;
-		var graph:FlxTexture = super.set_texture(Value);
-		FlxG.bitmap.removeIfNoUse(oldGraphic);
-		return graph;
+		var oldTexture:FlxTexture = texture;
+		var newTexture:FlxTexture = super.set_texture(Value);
+		FlxG.bitmap.removeIfNoUse(oldTexture);
+		return newTexture;
 	}
 	
 	override private function updateColorTransform():Void

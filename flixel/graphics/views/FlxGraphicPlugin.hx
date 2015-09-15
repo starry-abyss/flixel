@@ -2,6 +2,7 @@ package flixel.graphics.views;
 
 import flixel.FlxAtomic;
 import flixel.FlxBaseSprite;
+import flixel.FlxObject;
 import flixel.FlxObjectPlugin;
 
 /**
