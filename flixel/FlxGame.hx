@@ -124,10 +124,6 @@ class FlxGame extends Sprite
 	 */
 	private var _stepMS:Float;
 	/**
-	 * Optimization so we don't have to divide step by 1000 to get its value in seconds every frame.
-	 */
-	private var _stepSeconds:Float;
-	/**
 	 * Max allowable accumulation (see `_accumulator`).
 	 * Should always (and automatically) be set to roughly 2x the stage framerate.
 	 */
@@ -750,18 +746,11 @@ class FlxGame extends Sprite
 	
 	private function updateElapsed():Void
 	{
-		if (FlxG.fixedTimestep)
-		{
-			FlxG.elapsed = FlxG.timeScale * _stepSeconds; // fixed timestep
-		}
-		else
-		{
-			FlxG.elapsed = FlxG.timeScale * (_elapsedMS / 1000); // variable timestep
-			
-			var max = FlxG.maxElapsed * FlxG.timeScale;
-			if (FlxG.elapsed > max)
-				FlxG.elapsed = max;
-		}
+		FlxG.elapsed = FlxG.timeScale * (_elapsedMS / 1000); // variable timestep
+		
+		var max = FlxG.maxElapsed * FlxG.timeScale;
+		if (FlxG.elapsed > max)
+			FlxG.elapsed = max;
 	}
 	
 	private function updateInput():Void

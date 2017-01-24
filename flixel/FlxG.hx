@@ -684,7 +684,6 @@ class FlxG
 		updateFramerate = Framerate;
 		
 		game._stepMS = Math.abs(1000 / Framerate);
-		game._stepSeconds = game._stepMS / 1000;
 		
 		if (game._maxAccumulation < game._stepMS)
 			game._maxAccumulation = game._stepMS;
